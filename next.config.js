@@ -6,5 +6,11 @@ module.exports = {
     }
 
     return config
+  },
+  exportPathMap: function () {
+    return {
+      '/': { page: '/' },
+      '/signup': { page: '/signup' }
+    }
   }
 }
