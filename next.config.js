@@ -7,6 +7,7 @@ module.exports = {
 
     return config
   },
+  exportTrailingSlash: true,
   exportPathMap: function () {
     return {
       '/': { page: '/' },
