@@ -25,7 +25,7 @@ export default function Index() {
         <Typography variant="h4" component="h1" gutterBottom>
           Next.js v4-beta example
         </Typography>
-        <Link href="/about" color="secondary">
+        <Link href="/about/" color="secondary">
           Go to the about page
         </Link>
         <ProTip />
