@@ -1,10 +1,10 @@
-import React from 'react';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import MuiLink from '@material-ui/core/Link';
-import ProTip from '../src/ProTip';
-import Link from '../src/Link';
+import React from 'react'
+import Container from '@material-ui/core/Container'
+import Typography from '@material-ui/core/Typography'
+import Box from '@material-ui/core/Box'
+import MuiLink from '@material-ui/core/Link'
+import ProTip from '../src/ProTip'
+import Link from '../src/Link'
 
 function MadeWithLove() {
   return (
@@ -15,7 +15,7 @@ function MadeWithLove() {
       </MuiLink>
       {' team.'}
     </Typography>
-  );
+  )
 }
 
 export default function Index() {
@@ -32,5 +32,5 @@ export default function Index() {
         <MadeWithLove />
       </Box>
     </Container>
-  );
+  )
 }

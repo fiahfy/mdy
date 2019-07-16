@@ -1,5 +1,5 @@
 module.exports = {
-  webpack: config => {
+  webpack: (config) => {
     // Fixes npm packages that depend on `fs` module
     config.node = {
       fs: 'empty'
@@ -8,9 +8,10 @@ module.exports = {
     return config
   },
   exportTrailingSlash: true,
-  exportPathMap: function () {
+  exportPathMap: function() {
     return {
       '/': { page: '/' },
+      '/about': { page: '/about' },
       '/signup': { page: '/signup' }
     }
   }
