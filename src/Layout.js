@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import Router from 'next/router'
 import { makeStyles } from '@material-ui/core/styles'
@@ -45,22 +45,24 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default function Layout(props) {
-  if (!process.browser) {
-    console.log('server')
-    return null
-  }
-
   const classes = useStyles()
 
-  console.log('browser')
-  console.log(firebaseApp.auth().currentUser)
-  const { displayName, photoURL } = firebaseApp.auth().currentUser
+  // console.log('browser')
+  // console.log(firebaseApp.auth().currentUser)
+  // if (!firebaseApp.auth().currentUser) {
+  //   return null
+  // }
+  // const { displayName, photoURL } = firebaseApp.auth().currentUser
+
+  const [anchorEl, setAnchorEl] = React.useState(null)
+  const [user, setUser] = React.useState(null)
+  const [loading, setLoading] = React.useState(true)
 
   function MyAvatar() {
-    if (photoURL) {
+    if (user.photoURL) {
       return (
         <ListItemAvatar>
-          <Avatar src={photoURL} />
+          <Avatar src={user.photoURL} />
         </ListItemAvatar>
       )
     } else {
@@ -71,8 +73,6 @@ export default function Layout(props) {
       )
     }
   }
-
-  const [anchorEl, setAnchorEl] = React.useState(null)
 
   function handleClick(event) {
     setAnchorEl(event.currentTarget)
@@ -85,6 +85,23 @@ export default function Layout(props) {
   async function handleLogOut() {
     await firebaseApp.auth().signOut()
     Router.push('/')
+  }
+
+  useEffect(() => {
+    console.log('start effect')
+    firebaseApp.auth().onAuthStateChanged((currentUser) => {
+      if (!currentUser) {
+        return Router.push('/')
+      }
+      setUser(currentUser)
+      setLoading(false)
+      console.log('did effect')
+      console.log(currentUser)
+    })
+  })
+
+  if (loading) {
+    return <div>loading...</div>
   }
 
   return (
@@ -105,7 +122,7 @@ export default function Layout(props) {
             onClick={handleClick}
           >
             <MyAvatar />
-            <ListItemText primary={displayName} />
+            <ListItemText primary={user.displayName} />
             <ListItemSecondaryAction>
               <ArrowDropDownIcon />
             </ListItemSecondaryAction>
