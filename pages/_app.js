@@ -4,16 +4,21 @@ import Head from 'next/head'
 import { ThemeProvider } from '@material-ui/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import theme from '../src/theme'
+import firebaseApp from '../src/firebase'
 
 class MyApp extends App {
-  componentDidMount() {
+  constructor() {
+    super()
+  }
+  async componentDidMount() {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side')
     if (jssStyles) {
       jssStyles.parentNode.removeChild(jssStyles)
     }
-  }
 
+
+  }
   render() {
     const { Component, pageProps } = this.props
 
@@ -30,6 +35,17 @@ class MyApp extends App {
       </Container>
     )
   }
+}
+
+MyApp.getInitialProps = async () => {
+  console.log('my')
+  await new Promise((resolve) => {
+    firebaseApp.auth().onAuthStateChanged(() => {
+      resolve()
+    })
+  })
+  console.log('did')
+  return {}
 }
 
 export default MyApp

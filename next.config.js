@@ -24,7 +24,9 @@ module.exports = {
     return {
       '/': { page: '/' },
       '/about': { page: '/about' },
-      '/signup': { page: '/signup' }
+      '/login': { page: '/login' },
+      '/profile': { page: '/profile' },
+      '/register': { page: '/register' }
     }
   }
 }
