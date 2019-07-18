@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import { makeStyles } from '@material-ui/core/styles'
 import firebase from 'firebase/app'
-import firebaseApp from '../src/firebase'
+import app from '../src/firebase'
 
 const useStyles = makeStyles((theme) => ({
   '@global': {
@@ -54,8 +54,13 @@ export default function SignIn() {
   async function handleSubmit(e) {
     e.preventDefault()
     const provider = new firebase.auth.GithubAuthProvider()
-    await firebaseApp.auth().signInWithPopup(provider)
-    Router.push('/profile/')
+    await app.auth().signInWithPopup(provider)
+    await app
+      .firestore()
+      .collection('users')
+      .doc(app.auth().currentUser.uid)
+      .set({ uid: app.auth().currentUser.uid })
+    Router.push('/notes')
   }
 
   return (

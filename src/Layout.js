@@ -1,22 +1,26 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
+import NextLink from 'next/link'
 import Router from 'next/router'
 import Avatar from '@material-ui/core/Avatar'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Container from '@material-ui/core/Container'
 import Divider from '@material-ui/core/Divider'
 import Drawer from '@material-ui/core/Drawer'
+import IconButton from '@material-ui/core/IconButton'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+import ListSubheader from '@material-ui/core/ListSubheader'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
-import InboxIcon from '@material-ui/icons/MoveToInbox'
+import MoveToInboxIcon from '@material-ui/icons/MoveToInbox'
+import AddIcon from '@material-ui/icons/Add'
 import { makeStyles } from '@material-ui/core/styles'
 import app from '../src/firebase'
 
@@ -47,6 +51,9 @@ const useStyles = makeStyles((theme) => ({
   accountIcon: {
     width: 40,
     height: 40
+  },
+  button: {
+    padding: theme.spacing(1)
   }
 }))
 
@@ -73,11 +80,11 @@ export default function Layout(props) {
     }
   }
 
-  function handleClick(event) {
-    setAnchorEl(event.currentTarget)
+  function handleMenuClick(e) {
+    setAnchorEl(e.currentTarget)
   }
 
-  function handleClose() {
+  function handleMenuClose() {
     setAnchorEl(null)
   }
 
@@ -86,14 +93,25 @@ export default function Layout(props) {
     Router.push('/')
   }
 
+  async function handleNewNoteClick() {
+    await app
+      .firestore()
+      .collection(`users/${app.auth().currentUser.uid}/notes`)
+      .doc()
+      .set({ title: Date.now() })
+  }
+
   useEffect(() => {
-    app.auth().onAuthStateChanged((currentUser) => {
+    const unsubscribe = app.auth().onAuthStateChanged((currentUser) => {
       if (!currentUser) {
         return Router.push('/')
       }
       setUser(currentUser)
       setLoading(false)
     })
+    return function cleanup() {
+      unsubscribe()
+    }
   })
 
   if (loading) {
@@ -121,7 +139,7 @@ export default function Layout(props) {
             button
             aria-controls="simple-menu"
             aria-haspopup="true"
-            onClick={handleClick}
+            onClick={handleMenuClick}
           >
             <MyAvatar />
             <ListItemText primary={user.displayName} />
@@ -134,22 +152,38 @@ export default function Layout(props) {
             anchorEl={anchorEl}
             keepMounted
             open={Boolean(anchorEl)}
-            onClose={handleClose}
+            onClose={handleMenuClose}
           >
-            <MenuItem component="a" href="/profile/">
-              Profile
-            </MenuItem>
+            <NextLink href="/profile" passHref>
+              <MenuItem component="a" href="/profile">
+                Profile
+              </MenuItem>
+            </NextLink>
             <MenuItem onClick={handleLogOut}>Logout</MenuItem>
           </Menu>
         </List>
         <Divider />
         <List>
-          <ListItem button>
-            <ListItemIcon>
-              <InboxIcon />
-            </ListItemIcon>
-            <ListItemText primary="All note" />
-          </ListItem>
+          <ListSubheader>
+            New note
+            <ListItemSecondaryAction>
+              <IconButton
+                edge="end"
+                aria-label="New note"
+                onClick={handleNewNoteClick}
+              >
+                <AddIcon />
+              </IconButton>
+            </ListItemSecondaryAction>
+          </ListSubheader>
+          <NextLink href="/notes" passHref>
+            <ListItem button>
+              <ListItemIcon>
+                <MoveToInboxIcon />
+              </ListItemIcon>
+              <ListItemText primary="All note" />
+            </ListItem>
+          </NextLink>
         </List>
       </Drawer>
       <main className={classes.content}>{props.children}</main>

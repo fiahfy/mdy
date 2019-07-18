@@ -25,6 +25,7 @@ module.exports = {
       '/': { page: '/' },
       '/about': { page: '/about' },
       '/login': { page: '/login' },
+      '/notes': { page: '/notes' },
       '/profile': { page: '/profile' },
       '/register': { page: '/register' }
     }
