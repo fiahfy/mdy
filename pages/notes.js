@@ -1,35 +1,47 @@
 import React, { useEffect } from 'react'
 import Layout from '../src/Layout'
 import app from '../src/firebase'
+import withAuth from '../src/withAuth'
 
-export default function Notes() {
-  const [notes, setNotes] = React.useState(null)
+function Notes() {
+  const [notes, setNotes] = React.useState([])
+
+  const uid = app.auth().currentUser.uid
 
   useEffect(() => {
-    if (!app.auth().currentUser) {
-      return
-    }
-    app
+    const unsubscribe = app
       .firestore()
-      .collection(`users/${app.auth().currentUser.uid}/notes`)
-      .get()
-      .docs.map((doc) => {
-        const data = doc.data()
-        return {
-          ...data,
-          id: doc.id
-        }
-      })
-      .then((notes) => {
+      .collection(`users/${uid}/notes`)
+      .orderBy('title')
+      .onSnapshot((snapshot) => {
+        const notes = snapshot.docs.map((doc) => {
+          const data = doc.data()
+          return {
+            ...data,
+            id: doc.id
+          }
+        })
         setNotes(notes)
       })
-  })
+
+    return () => unsubscribe()
+  }, [uid])
 
   console.log(notes)
 
-  return <Layout>Notes</Layout>
+  return (
+    <Layout>
+      {(() => {
+        return notes.map((note) => {
+          return <div key={note.id}>{note.title}</div>
+        })
+      })()}
+    </Layout>
+  )
 }
 
 Notes.getInitialProps = () => {
   return {}
 }
+
+export default withAuth(Notes)
