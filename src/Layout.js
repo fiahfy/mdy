@@ -24,13 +24,7 @@ import app from '../src/firebase'
 
 const drawerWidth = 240
 
-const useStyles = makeStyles((theme) => ({
-  loading: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
+const useStyles = makeStyles(() => ({
   root: {
     display: 'flex'
   },
@@ -42,16 +36,11 @@ const useStyles = makeStyles((theme) => ({
     width: drawerWidth
   },
   content: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.default,
-    padding: theme.spacing(3)
+    flexGrow: 1
   },
   accountIcon: {
     width: 40,
     height: 40
-  },
-  button: {
-    padding: theme.spacing(1)
   }
 }))
 
@@ -156,7 +145,7 @@ export default function Layout(props) {
               <ListItemIcon>
                 <MoveToInboxIcon />
               </ListItemIcon>
-              <ListItemText primary="All note" />
+              <ListItemText primary="All notes" />
             </ListItem>
           </NextLink>
         </List>

@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default function withAuth(WrappedComponent) {
-  return function Component(props) {
+  function Component(props) {
     const classes = useStyles()
 
     const [loading, setLoading] = React.useState(true)
@@ -43,4 +43,13 @@ export default function withAuth(WrappedComponent) {
 
     return <WrappedComponent {...props} />
   }
+
+  Component.getInitialProps = async (ctx) => {
+    return (
+      WrappedComponent.getInitialProps &&
+      (await WrappedComponent.getInitialProps(ctx))
+    )
+  }
+
+  return Component
 }

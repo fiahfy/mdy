@@ -1,10 +1,17 @@
 import React, { useEffect } from 'react'
+import PropTypes from 'prop-types'
+import NextLink from 'next/link'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
 import Layout from '../src/Layout'
 import app from '../src/firebase'
 import withAuth from '../src/withAuth'
 
-function Notes() {
+function Notes(props) {
   const [notes, setNotes] = React.useState([])
+
+  const { id } = props
 
   const uid = app.auth().currentUser.uid
 
@@ -27,21 +34,28 @@ function Notes() {
     return () => unsubscribe()
   }, [uid])
 
-  console.log(notes)
-
   return (
     <Layout>
-      {(() => {
-        return notes.map((note) => {
-          return <div key={note.id}>{note.title}</div>
-        })
-      })()}
+      <List>
+        {(() =>
+          notes.map((note, i) => (
+            <NextLink key={i} href={`/notes?id=${note.id}`} passHref>
+              <ListItem button selected={note.id === id}>
+                <ListItemText primary={note.title} />
+              </ListItem>
+            </NextLink>
+          )))()}
+      </List>
     </Layout>
   )
 }
 
-Notes.getInitialProps = () => {
-  return {}
+Notes.propTypes = {
+  id: PropTypes.string
+}
+
+Notes.getInitialProps = ({ query }) => {
+  return { id: query.id }
 }
 
 export default withAuth(Notes)
