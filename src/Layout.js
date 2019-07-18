@@ -1,28 +1,34 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import Router from 'next/router'
-import { makeStyles } from '@material-ui/core/styles'
+import Avatar from '@material-ui/core/Avatar'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Container from '@material-ui/core/Container'
+import Divider from '@material-ui/core/Divider'
 import Drawer from '@material-ui/core/Drawer'
 import List from '@material-ui/core/List'
-import Divider from '@material-ui/core/Divider'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
-import Avatar from '@material-ui/core/Avatar'
-import InboxIcon from '@material-ui/icons/MoveToInbox'
-import MailIcon from '@material-ui/icons/Mail'
-import AccountCircleIcon from '@material-ui/icons/AccountCircle'
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
-
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
-import firebaseApp from '../src/firebase'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
+import InboxIcon from '@material-ui/icons/MoveToInbox'
+import { makeStyles } from '@material-ui/core/styles'
+import app from '../src/firebase'
 
 const drawerWidth = 240
 
 const useStyles = makeStyles((theme) => ({
+  loading: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
   root: {
     display: 'flex'
   },
@@ -47,16 +53,9 @@ const useStyles = makeStyles((theme) => ({
 export default function Layout(props) {
   const classes = useStyles()
 
-  // console.log('browser')
-  // console.log(firebaseApp.auth().currentUser)
-  // if (!firebaseApp.auth().currentUser) {
-  //   return null
-  // }
-  // const { displayName, photoURL } = firebaseApp.auth().currentUser
-
-  const [anchorEl, setAnchorEl] = React.useState(null)
-  const [user, setUser] = React.useState(null)
   const [loading, setLoading] = React.useState(true)
+  const [user, setUser] = React.useState(null)
+  const [anchorEl, setAnchorEl] = React.useState(null)
 
   function MyAvatar() {
     if (user.photoURL) {
@@ -83,25 +82,28 @@ export default function Layout(props) {
   }
 
   async function handleLogOut() {
-    await firebaseApp.auth().signOut()
+    await app.auth().signOut()
     Router.push('/')
   }
 
   useEffect(() => {
-    console.log('start effect')
-    firebaseApp.auth().onAuthStateChanged((currentUser) => {
+    app.auth().onAuthStateChanged((currentUser) => {
       if (!currentUser) {
         return Router.push('/')
       }
       setUser(currentUser)
       setLoading(false)
-      console.log('did effect')
-      console.log(currentUser)
     })
   })
 
   if (loading) {
-    return <div>loading...</div>
+    return (
+      <Container component="main" maxWidth="xs">
+        <div className={classes.loading}>
+          <CircularProgress />
+        </div>
+      </Container>
+    )
   }
 
   return (
@@ -157,7 +159,4 @@ export default function Layout(props) {
 
 Layout.propTypes = {
   children: PropTypes.node.isRequired
-}
-Layout.getInitialProps = () => {
-  console.log(1)
 }
