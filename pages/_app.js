@@ -13,6 +13,7 @@ class MyApp extends App {
       jssStyles.parentNode.removeChild(jssStyles)
     }
   }
+
   render() {
     const { Component, pageProps } = this.props
 

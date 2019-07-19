@@ -18,7 +18,9 @@ export default function withAuth(WrappedComponent) {
   function Component(props) {
     const classes = useStyles()
 
-    const [loading, setLoading] = React.useState(true)
+    const loggedIn = !!app.auth().currentUser
+
+    const [loading, setLoading] = React.useState(!loggedIn)
 
     useEffect(() => {
       const unsubscribe = app.auth().onAuthStateChanged((currentUser) => {

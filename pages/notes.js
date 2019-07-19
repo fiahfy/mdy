@@ -19,7 +19,7 @@ function Notes(props) {
     const unsubscribe = app
       .firestore()
       .collection(`users/${uid}/notes`)
-      .orderBy('title')
+      .orderBy('updated_at', 'desc')
       .onSnapshot((snapshot) => {
         const notes = snapshot.docs.map((doc) => {
           const data = doc.data()
@@ -40,8 +40,15 @@ function Notes(props) {
         {(() =>
           notes.map((note, i) => (
             <NextLink key={i} href={`/notes?id=${note.id}`} passHref>
-              <ListItem button selected={note.id === id}>
-                <ListItemText primary={note.title} />
+              <ListItem
+                alignItems="flex-start"
+                button
+                selected={note.id === id}
+              >
+                <ListItemText
+                  primary={note.title}
+                  secondary={"I'll be in your neighborhood doing errands this"}
+                />
               </ListItem>
             </NextLink>
           )))()}

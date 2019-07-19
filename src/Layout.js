@@ -5,7 +5,6 @@ import Router from 'next/router'
 import Avatar from '@material-ui/core/Avatar'
 import Divider from '@material-ui/core/Divider'
 import Drawer from '@material-ui/core/Drawer'
-import IconButton from '@material-ui/core/IconButton'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
@@ -15,16 +14,17 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import ListSubheader from '@material-ui/core/ListSubheader'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
+import { makeStyles } from '@material-ui/core/styles'
+import { grey } from '@material-ui/core/colors'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import MoveToInboxIcon from '@material-ui/icons/MoveToInbox'
 import AddIcon from '@material-ui/icons/Add'
-import { makeStyles } from '@material-ui/core/styles'
 import app from '../src/firebase'
 
 const drawerWidth = 240
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex'
   },
@@ -41,15 +41,24 @@ const useStyles = makeStyles(() => ({
   accountIcon: {
     width: 40,
     height: 40
+  },
+  menuPaper: {
+    width: drawerWidth - theme.spacing(2) * 2
+  },
+  addItemIcon: {
+    color: grey[600]
+  },
+  addItemText: {
+    color: grey[600]
   }
 }))
 
 export default function Layout(props) {
   const classes = useStyles()
 
-  const [anchorEl, setAnchorEl] = React.useState(null)
-
   const user = app.auth().currentUser
+
+  const [anchorEl, setAnchorEl] = React.useState(null)
 
   function MyAvatar() {
     if (user.photoURL) {
@@ -85,7 +94,11 @@ export default function Layout(props) {
       .firestore()
       .collection(`users/${app.auth().currentUser.uid}/notes`)
       .doc()
-      .set({ title: Date.now() })
+      .set({
+        title: Date.now(),
+        created_at: new Date(),
+        updated_at: new Date()
+      })
   }
 
   return (
@@ -114,32 +127,28 @@ export default function Layout(props) {
           <Menu
             id="simple-menu"
             anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left'
+            }}
+            getContentAnchorEl={null}
             keepMounted
             open={Boolean(anchorEl)}
             onClose={handleMenuClose}
+            classes={{ paper: classes.menuPaper }}
           >
             <NextLink href="/profile" passHref>
               <MenuItem component="a" href="/profile">
                 Profile
               </MenuItem>
             </NextLink>
+            <Divider />
             <MenuItem onClick={handleLogOut}>Logout</MenuItem>
           </Menu>
         </List>
         <Divider />
-        <List>
-          <ListSubheader>
-            New note
-            <ListItemSecondaryAction>
-              <IconButton
-                edge="end"
-                aria-label="New note"
-                onClick={handleNewNoteClick}
-              >
-                <AddIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListSubheader>
+        <List dense>
+          <ListSubheader>Notes</ListSubheader>
           <NextLink href="/notes" passHref>
             <ListItem button>
               <ListItemIcon>
@@ -148,6 +157,12 @@ export default function Layout(props) {
               <ListItemText primary="All notes" />
             </ListItem>
           </NextLink>
+          <ListItem button onClick={handleNewNoteClick}>
+            <ListItemIcon className={classes.addItemIcon}>
+              <AddIcon />
+            </ListItemIcon>
+            <ListItemText primary="New note" className={classes.addItemText} />
+          </ListItem>
         </List>
       </Drawer>
       <main className={classes.content}>{props.children}</main>
