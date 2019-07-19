@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import app from '../src/firebase'
 
 const useStyles = makeStyles((theme) => ({
-  loading: {
+  loader: {
     marginTop: theme.spacing(8),
     display: 'flex',
     flexDirection: 'column',
@@ -36,7 +36,7 @@ export default function withAuth(WrappedComponent) {
     if (loading) {
       return (
         <Container component="main" maxWidth="xs">
-          <div className={classes.loading}>
+          <div className={classes.loader}>
             <CircularProgress />
           </div>
         </Container>

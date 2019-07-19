@@ -20,6 +20,8 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import MoveToInboxIcon from '@material-ui/icons/MoveToInbox'
 import AddIcon from '@material-ui/icons/Add'
+import ExitToAppIcon from '@material-ui/icons/ExitToApp'
+import SettingsIcon from '@material-ui/icons/Settings'
 import app from '../src/firebase'
 
 const drawerWidth = 240
@@ -137,13 +139,21 @@ export default function Layout(props) {
             onClose={handleMenuClose}
             classes={{ paper: classes.menuPaper }}
           >
-            <NextLink href="/profile" passHref>
-              <MenuItem component="a" href="/profile">
-                Profile
+            <NextLink href="/settings" passHref>
+              <MenuItem>
+                <ListItemIcon>
+                  <SettingsIcon />
+                </ListItemIcon>
+                Settings
               </MenuItem>
             </NextLink>
             <Divider />
-            <MenuItem onClick={handleLogOut}>Logout</MenuItem>
+            <MenuItem onClick={handleLogOut}>
+              <ListItemIcon>
+                <ExitToAppIcon />
+              </ListItemIcon>
+              Logout
+            </MenuItem>
           </Menu>
         </List>
         <Divider />
