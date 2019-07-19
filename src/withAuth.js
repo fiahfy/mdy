@@ -1,23 +1,11 @@
 import React, { useEffect } from 'react'
 import Router from 'next/router'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import Container from '@material-ui/core/Container'
-import { makeStyles } from '@material-ui/core/styles'
+import Loader from '../src/Loader'
 import app from '../src/firebase'
-
-const useStyles = makeStyles((theme) => ({
-  loader: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  }
-}))
 
 export default function withAuth(WrappedComponent) {
   function Component(props) {
-    const classes = useStyles()
-
     const loggedIn = !!app.auth().currentUser
 
     const [loading, setLoading] = React.useState(!loggedIn)
@@ -36,9 +24,7 @@ export default function withAuth(WrappedComponent) {
     if (loading) {
       return (
         <Container component="main" maxWidth="xs">
-          <div className={classes.loader}>
-            <CircularProgress />
-          </div>
+          <Loader />
         </Container>
       )
     }
