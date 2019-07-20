@@ -15,15 +15,12 @@ import ListItemText from '@material-ui/core/ListItemText'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import ListSubheader from '@material-ui/core/ListSubheader'
 import Menu from '@material-ui/core/Menu'
-import MenuItem from '@material-ui/core/MenuItem'
 import { makeStyles } from '@material-ui/core/styles'
 import { grey } from '@material-ui/core/colors'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import MoveToInboxIcon from '@material-ui/icons/MoveToInbox'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
-import ExitToAppIcon from '@material-ui/icons/ExitToApp'
-import SettingsIcon from '@material-ui/icons/Settings'
 import app from '../src/firebase'
 
 import AppBar from '@material-ui/core/AppBar'
@@ -54,9 +51,6 @@ const useStyles = makeStyles((theme) => ({
   accountIcon: {
     width: 40,
     height: 40
-  },
-  menuPaper: {
-    width: drawerWidth - theme.spacing(2) * 2
   },
   addItemIcon: {
     color: grey[600]
@@ -187,7 +181,7 @@ export default function Layout(props) {
 
   const drawer = (
     <>
-      <List>
+      <List dense>
         <ListItem
           button
           aria-controls="simple-menu"
@@ -215,23 +209,16 @@ export default function Layout(props) {
           keepMounted
           open={Boolean(anchorEl)}
           onClose={handleMenuClose}
-          classes={{ paper: classes.menuPaper }}
         >
           <NextLink href="/settings" passHref>
-            <MenuItem dense>
-              <ListItemIcon>
-                <SettingsIcon />
-              </ListItemIcon>
+            <ListItem dense button>
               <ListItemText primary="Settings" />
-            </MenuItem>
+            </ListItem>
           </NextLink>
           <Divider />
-          <MenuItem dense onClick={handleSignOut}>
-            <ListItemIcon>
-              <ExitToAppIcon />
-            </ListItemIcon>
+          <ListItem dense button onClick={handleSignOut}>
             <ListItemText primary="Sign out" />
-          </MenuItem>
+          </ListItem>
         </Menu>
       </List>
       <Divider />
@@ -267,7 +254,7 @@ export default function Layout(props) {
           [classes.appBarShift]: mobileOpen
         })}
       >
-        <Toolbar variant="dense">
+        <Toolbar>
           <IconButton
             color="inherit"
             aria-label="Open drawer"

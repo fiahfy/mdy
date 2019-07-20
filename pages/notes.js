@@ -88,7 +88,7 @@ function Index(props) {
       {loading ? (
         <Loader />
       ) : (
-        <List>
+        <List dense>
           {(() =>
             notes.map((note, i) => (
               <NextLink key={i} href={`/notes?id=${note.id}`} passHref>
