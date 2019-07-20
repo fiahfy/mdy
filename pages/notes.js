@@ -39,14 +39,11 @@ const styles = () => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     minHeight: 40
-  },
-  textarea: {
-    width: '100%'
   }
 })
 
 function Index(props) {
-  const classes = makeStyles(styles)
+  const classes = makeStyles(styles)()
 
   const { id, user } = props
 
