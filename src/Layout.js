@@ -4,6 +4,7 @@ import clsx from 'clsx'
 import NextLink from 'next/link'
 import Router from 'next/router'
 import Avatar from '@material-ui/core/Avatar'
+import Box from '@material-ui/core/Box'
 import Divider from '@material-ui/core/Divider'
 import Drawer from '@material-ui/core/Drawer'
 import List from '@material-ui/core/List'
@@ -129,9 +130,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Layout(props) {
   const classes = useStyles()
 
-  const user = app.auth().currentUser
-
-  const { title } = props
+  const { title, user } = props
 
   const [mobileOpen, setMobileOpen] = React.useState(false)
   const [anchorEl, setAnchorEl] = React.useState(null)
@@ -153,21 +152,21 @@ export default function Layout(props) {
     setAnchorEl(null)
   }
 
-  async function handleLogOut() {
+  async function handleSignOut() {
     await app.auth().signOut()
     Router.push('/')
   }
 
   async function handleNewNoteClick() {
-    await app
+    const ref = await app
       .firestore()
       .collection(`users/${app.auth().currentUser.uid}/notes`)
-      .doc()
-      .set({
+      .add({
         title: Date.now(),
         created_at: new Date(),
         updated_at: new Date()
       })
+    Router.push(`/notes?id=${ref.id}`)
   }
 
   function MyAvatar() {
@@ -196,7 +195,11 @@ export default function Layout(props) {
           onClick={handleMenuShow}
         >
           <MyAvatar />
-          <ListItemText primary={user.displayName} />
+          <ListItemText>
+            <Box overflow="hidden" textOverflow="ellipsis">
+              {user.displayName}
+            </Box>
+          </ListItemText>
           <ListItemSecondaryAction>
             <ArrowDropDownIcon />
           </ListItemSecondaryAction>
@@ -223,11 +226,11 @@ export default function Layout(props) {
             </MenuItem>
           </NextLink>
           <Divider />
-          <MenuItem dense onClick={handleLogOut}>
+          <MenuItem dense onClick={handleSignOut}>
             <ListItemIcon>
               <ExitToAppIcon />
             </ListItemIcon>
-            <ListItemText primary="Logout" />
+            <ListItemText primary="Sign out" />
           </MenuItem>
         </Menu>
       </List>
@@ -324,5 +327,6 @@ export default function Layout(props) {
 
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
-  title: PropTypes.string
+  title: PropTypes.string,
+  user: PropTypes.object.isRequired
 }
