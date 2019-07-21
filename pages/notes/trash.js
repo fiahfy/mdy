@@ -75,20 +75,22 @@ function Trash() {
             notes.map((note) => <NoteListItem key={note.id} note={note} />))()}
         </List>
       ) : (
-        <Container component="main" maxWidth="xs">
-          <Box align="center" mt={8} color="lightgray" fontSize={96}>
-            <DeleteIcon fontSize="inherit" />
+        <Container component="main">
+          <Box mt={8} display="flex" flexDirection="column" alignItems="center">
+            <Box color="lightgray" fontSize={96}>
+              <DeleteIcon fontSize="inherit" />
+            </Box>
+            <Typography align="center" variant="h6">
+              Empty in deleted notes
+            </Typography>
+            <Typography align="center" variant="body2">
+              Delete a note and it will show up here.
+            </Typography>
           </Box>
-          <Typography align="center" variant="h6">
-            Empty in deleted notes
-          </Typography>
-          <Typography align="center" variant="body2">
-            Delete a note and it will show up here.
-          </Typography>
         </Container>
       )}
     </Layout>
   )
 }
 
-export default withAuth(Trash)
+export default withAuth(true)(Trash)

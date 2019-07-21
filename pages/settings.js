@@ -18,4 +18,4 @@ Settings.getInitialProps = () => {
   return {}
 }
 
-export default withAuth(Settings)
+export default withAuth(true)(Settings)

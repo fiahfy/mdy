@@ -4,37 +4,44 @@ import Container from '@material-ui/core/Container'
 import Loader from '../src/Loader'
 import app from '../src/firebase'
 
-export default function withAuth(Component) {
-  function WrappedComponent(props) {
-    const loggedIn = !!app.auth().currentUser
+export default function withAuth(required = false) {
+  return (Component) => {
+    function WrappedComponent(props) {
+      const loggedIn = !!app.auth().currentUser
 
-    const [loading, setLoading] = React.useState(!loggedIn)
+      const [loading, setLoading] = React.useState(!loggedIn)
 
-    useEffect(() => {
-      const unsubscribe = app.auth().onAuthStateChanged((currentUser) => {
-        if (!currentUser) {
-          return Router.push('/')
-        }
-        setLoading(false)
+      useEffect(() => {
+        const unsubscribe = app.auth().onAuthStateChanged((currentUser) => {
+          if (currentUser && !required) {
+            return Router.push('/notes')
+          }
+          if (!currentUser && required) {
+            return Router.push('/')
+          }
+          setLoading(false)
+        })
+
+        return () => unsubscribe()
       })
 
-      return () => unsubscribe()
-    })
+      if (loading) {
+        return (
+          <Container component="main">
+            <Loader />
+          </Container>
+        )
+      }
 
-    if (loading) {
-      return (
-        <Container component="main">
-          <Loader />
-        </Container>
-      )
+      return <Component {...props} />
     }
 
-    return <Component {...props} />
-  }
+    WrappedComponent.getInitialProps = async (ctx) => {
+      return Component.getInitialProps
+        ? await Component.getInitialProps(ctx)
+        : {}
+    }
 
-  WrappedComponent.getInitialProps = async (ctx) => {
-    return Component.getInitialProps ? await Component.getInitialProps(ctx) : {}
+    return WrappedComponent
   }
-
-  return WrappedComponent
 }

@@ -4,7 +4,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 
 export default function Loader() {
   return (
-    <Box align="center" mt={8}>
+    <Box mt={8} display="flex" flexDirection="column" alignItems="center">
       <CircularProgress />
     </Box>
   )

@@ -170,7 +170,7 @@ export default function Layout(props) {
   async function handleNewNoteClick() {
     const ref = await app
       .firestore()
-      .collection(`users/${app.auth().currentUser.uid}/notes`)
+      .collection(`users/${user.uid}/notes`)
       .add({
         title: Date.now(),
         created_at: new Date(),

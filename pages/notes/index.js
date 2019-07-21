@@ -85,16 +85,18 @@ function Index(props) {
             )))()}
         </List>
       ) : (
-        <Container component="main" maxWidth="xs">
-          <Box align="center" mt={8} color="lightgray" fontSize={96}>
-            <InsertDriveFileIcon fontSize="inherit" />
+        <Container component="main">
+          <Box mt={8} display="flex" flexDirection="column" alignItems="center">
+            <Box color="lightgray" fontSize={96}>
+              <InsertDriveFileIcon fontSize="inherit" />
+            </Box>
+            <Typography align="center" variant="h6">
+              Empty in notes
+            </Typography>
+            <Typography align="center" variant="body2">
+              Create a note and it will show up here.
+            </Typography>
           </Box>
-          <Typography align="center" variant="h6">
-            Empty in notes
-          </Typography>
-          <Typography align="center" variant="body2">
-            Create a note and it will show up here.
-          </Typography>
         </Container>
       )}
     </Layout>
@@ -261,4 +263,4 @@ Notes.getInitialProps = ({ query }) => {
   return { id: query.id }
 }
 
-export default withAuth(Notes)
+export default withAuth(true)(Notes)

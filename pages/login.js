@@ -1,6 +1,7 @@
 import React from 'react'
 import Router from 'next/router'
 import Avatar from '@material-ui/core/Avatar'
+import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
 import Container from '@material-ui/core/Container'
 import Link from '@material-ui/core/Link'
@@ -11,19 +12,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import firebase from 'firebase/app'
 import app from '../src/firebase'
+import withAuth from '../src/withAuth'
 
 const useStyles = makeStyles((theme) => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white
-    }
-  },
-  paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main
@@ -37,11 +28,21 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-export default function SignIn() {
+function SignIn() {
   const classes = useStyles()
 
   const [email, setEmail] = React.useState('')
   const [password, setPassword] = React.useState('')
+
+  async function afterSignIn() {
+    const user = app.auth().currentUser
+    await app
+      .firestore()
+      .collection('users')
+      .doc(user.uid)
+      .set({ uid: user.uid })
+    Router.push('/notes')
+  }
 
   function handleEmailChange(e) {
     setEmail(e.target.value)
@@ -53,49 +54,49 @@ export default function SignIn() {
 
   async function handleSubmit(e) {
     e.preventDefault()
+    await app.auth().signInWithEmailAndPassword(email, password)
+    await afterSignIn()
+  }
+
+  async function handleClick() {
     const provider = new firebase.auth.GithubAuthProvider()
     await app.auth().signInWithPopup(provider)
-    await app
-      .firestore()
-      .collection('users')
-      .doc(app.auth().currentUser.uid)
-      .set({ uid: app.auth().currentUser.uid })
-    Router.push('/notes')
+    await afterSignIn()
   }
 
   return (
     <Container component="main" maxWidth="xs">
-      <div className={classes.paper}>
+      <Box mt={8} display="flex" flexDirection="column" alignItems="center">
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate onSubmit={handleSubmit}>
+        <form className={classes.form} onSubmit={handleSubmit}>
           <TextField
+            id="email"
+            name="email"
+            label="Email Address"
+            autoComplete="email"
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
             autoFocus
             onChange={handleEmailChange}
             value={email}
           />
           <TextField
+            id="password"
+            name="password"
+            type="password"
+            label="Password"
+            autoComplete="current-password"
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
             onChange={handlePasswordChange}
             value={password}
           />
@@ -107,6 +108,16 @@ export default function SignIn() {
             className={classes.submit}
           >
             Sign In
+          </Button>
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            margin="normal"
+            className={classes.submit}
+            onClick={handleClick}
+          >
+            Sign In with GitHub
           </Button>
           <Grid container>
             <Grid item xs>
@@ -121,7 +132,9 @@ export default function SignIn() {
             </Grid>
           </Grid>
         </form>
-      </div>
+      </Box>
     </Container>
   )
 }
+
+export default withAuth()(SignIn)
