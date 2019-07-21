@@ -23,7 +23,7 @@ export default function withAuth(WrappedComponent) {
 
     if (loading) {
       return (
-        <Container component="main" maxWidth="xs">
+        <Container component="main">
           <Loader />
         </Container>
       )

@@ -1,22 +1,11 @@
 import React from 'react'
+import Box from '@material-ui/core/Box'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import { makeStyles } from '@material-ui/core/styles'
-
-const useStyles = makeStyles((theme) => ({
-  loader: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  }
-}))
 
 export default function Loader() {
-  const classes = useStyles()
-
   return (
-    <div className={classes.loader}>
+    <Box align="center" mt={8}>
       <CircularProgress />
-    </div>
+    </Box>
   )
 }

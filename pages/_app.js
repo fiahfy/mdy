@@ -3,6 +3,7 @@ import App, { Container } from 'next/app'
 import Head from 'next/head'
 import { ThemeProvider } from '@material-ui/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
+import 'easymde/dist/easymde.min.css'
 import theme from '../src/theme'
 
 class MyApp extends App {

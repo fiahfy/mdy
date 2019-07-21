@@ -2,18 +2,23 @@ import React, { Component, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import Head from 'next/head'
 import NextLink from 'next/link'
+import Router from 'next/router'
 import Error from 'next/error'
 import SimpleMDE from 'react-simplemde-editor'
-import 'easymde/dist/easymde.min.css'
 import Box from '@material-ui/core/Box'
+import Container from '@material-ui/core/Container'
+import IconButton from '@material-ui/core/IconButton'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
+import Typography from '@material-ui/core/Typography'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
-import Layout from '../src/Layout'
-import Loader from '../src/Loader'
-import app from '../src/firebase'
-import withAuth from '../src/withAuth'
+import DeleteIcon from '@material-ui/icons/Delete'
+import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile'
+import Layout from '../../src/Layout'
+import Loader from '../../src/Loader'
+import app from '../../src/firebase'
+import withAuth from '../../src/withAuth'
 
 const debounce = (callback, milli) => {
   let timer
@@ -45,7 +50,9 @@ const styles = () => ({
 function Index(props) {
   const classes = makeStyles(styles)()
 
-  const { id, user } = props
+  const user = app.auth().currentUser
+
+  const { id } = props
 
   const [loading, setLoading] = React.useState(true)
   const [notes, setNotes] = React.useState([])
@@ -64,7 +71,9 @@ function Index(props) {
     const unsubscribe = app
       .firestore()
       .collection(`users/${user.uid}/notes`)
+      .where('deleted_at', '==', null)
       .orderBy('updated_at', 'desc')
+      .limit(10)
       .onSnapshot((snapshot) => {
         const notes = snapshot.docs.map((doc) => {
           const data = doc.data()
@@ -87,7 +96,7 @@ function Index(props) {
       </Head>
       {loading ? (
         <Loader />
-      ) : (
+      ) : notes.length ? (
         <List dense>
           {(() =>
             notes.map((note, i) => (
@@ -108,14 +117,25 @@ function Index(props) {
               </NextLink>
             )))()}
         </List>
+      ) : (
+        <Container component="main" maxWidth="xs">
+          <Box align="center" mt={8} color="lightgray" fontSize={96}>
+            <InsertDriveFileIcon fontSize="inherit" />
+          </Box>
+          <Typography align="center" variant="h6">
+            Empty in notes
+          </Typography>
+          <Typography align="center" variant="body2">
+            Create a note and it will show up here.
+          </Typography>
+        </Container>
       )}
     </Layout>
   )
 }
 
 Index.propTypes = {
-  id: PropTypes.string,
-  user: PropTypes.object.isRequired
+  id: PropTypes.string
 }
 
 class InnerShow extends Component {
@@ -126,14 +146,26 @@ class InnerShow extends Component {
       note: null,
       content: ''
     }
-    this.handleChange = this.handleChange.bind(this)
+
+    this.user = app.auth().currentUser
     this.debounced = debounce(() => this.update(), 3 * 1000)
+    this.handleTextChange = this.handleTextChange.bind(this)
+    this.handleDeleteClick = this.handleDeleteClick.bind(this)
   }
 
-  handleChange(value) {
+  handleTextChange(value) {
     this.setState({ content: value })
     this.lastUpdatedAt = new Date()
     this.timer = this.debounced()
+  }
+
+  async handleDeleteClick() {
+    const { id } = this.props
+    await app
+      .firestore()
+      .doc(`users/${this.user.uid}/notes/${id}`)
+      .delete()
+    Router.push('/notes')
   }
 
   title() {
@@ -143,24 +175,23 @@ class InnerShow extends Component {
   }
 
   async update() {
-    const { id, user } = this.props
+    const { id } = this.props
     const { content } = this.state
     await app
       .firestore()
-      .doc(`users/${user.uid}/notes/${id}`)
+      .doc(`users/${this.user.uid}/notes/${id}`)
       .update({
         content,
         updated_at: this.lastUpdatedAt
       })
-    console.log('update')
   }
 
   componentDidMount() {
-    const { id, user } = this.props
+    const { id } = this.props
 
     this.unsubscribe = app
       .firestore()
-      .doc(`users/${user.uid}/notes/${id}`)
+      .doc(`users/${this.user.uid}/notes/${id}`)
       .onSnapshot((doc) => {
         if (doc.exists) {
           const data = doc.data()
@@ -189,12 +220,11 @@ class InnerShow extends Component {
   }
 
   render() {
-    const { user } = this.props
     const { loading, note, content } = this.state
 
     if (loading) {
       return (
-        <Layout user={user}>
+        <Layout>
           <Loader />
         </Layout>
       )
@@ -205,14 +235,26 @@ class InnerShow extends Component {
     }
 
     return (
-      <Layout user={user} title={this.title()}>
+      <Layout
+        title={this.title()}
+        rightMenu={
+          <IconButton
+            aria-label="Delete Note"
+            edge="end"
+            color="inherit"
+            onClick={this.handleDeleteClick}
+          >
+            <DeleteIcon />
+          </IconButton>
+        }
+      >
         <Head>
           <title>{this.title()} - Mdy</title>
         </Head>
         <Box>
           <SimpleMDE
             value={content}
-            onChange={this.handleChange}
+            onChange={this.handleTextChange}
             options={{
               minHeight: `${window.innerHeight}px`,
               indentWithTabs: false,
@@ -229,8 +271,7 @@ class InnerShow extends Component {
 }
 
 InnerShow.propTypes = {
-  id: PropTypes.string.isRequired,
-  user: PropTypes.object.isRequired
+  id: PropTypes.string.isRequired
 }
 
 const Show = withStyles(styles)(InnerShow)
@@ -238,11 +279,9 @@ const Show = withStyles(styles)(InnerShow)
 function Notes(props) {
   const { id } = props
 
-  const user = app.auth().currentUser
-
   const Component = id ? Show : Index
 
-  return <Component id={id} user={user} />
+  return <Component id={id} />
 }
 
 Notes.propTypes = {

@@ -13,13 +13,12 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
-import ListSubheader from '@material-ui/core/ListSubheader'
 import Menu from '@material-ui/core/Menu'
 import { makeStyles } from '@material-ui/core/styles'
-import { grey } from '@material-ui/core/colors'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
-import MoveToInboxIcon from '@material-ui/icons/MoveToInbox'
+import DeleteIcon from '@material-ui/icons/Delete'
+import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import app from '../src/firebase'
 
@@ -52,12 +51,6 @@ const useStyles = makeStyles((theme) => ({
     width: 40,
     height: 40
   },
-  addItemIcon: {
-    color: grey[600]
-  },
-  addItemText: {
-    color: grey[600]
-  },
   appBar: {
     [theme.breakpoints.up('sm')]: {
       marginLeft: drawerWidth,
@@ -85,6 +78,9 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('sm')]: {
       display: 'none'
     }
+  },
+  grow: {
+    flexGrow: 1
   },
   toolbar: theme.mixins.toolbar,
   content: {
@@ -124,7 +120,9 @@ const useStyles = makeStyles((theme) => ({
 export default function Layout(props) {
   const classes = useStyles()
 
-  const { title, user } = props
+  const user = app.auth().currentUser
+
+  const { title, rightMenu } = props
 
   const [mobileOpen, setMobileOpen] = React.useState(false)
   const [anchorEl, setAnchorEl] = React.useState(null)
@@ -158,16 +156,18 @@ export default function Layout(props) {
       .add({
         title: Date.now(),
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
+        deleted_at: null
       })
     Router.push(`/notes?id=${ref.id}`)
   }
 
-  function MyAvatar() {
-    if (user.photoURL) {
+  function MyAvatar({ photoURL }) {
+    console.log('ava', photoURL)
+    if (photoURL) {
       return (
         <ListItemAvatar>
-          <Avatar src={user.photoURL} />
+          <Avatar src={photoURL} />
         </ListItemAvatar>
       )
     } else {
@@ -188,7 +188,7 @@ export default function Layout(props) {
           aria-haspopup="true"
           onClick={handleMenuShow}
         >
-          <MyAvatar />
+          <MyAvatar photoURL={user.photoURL} />
           <ListItemText>
             <Box overflow="hidden" textOverflow="ellipsis">
               {user.displayName}
@@ -223,21 +223,31 @@ export default function Layout(props) {
       </List>
       <Divider />
       <List dense>
-        <ListSubheader>Notes</ListSubheader>
+        <ListItem button onClick={handleNewNoteClick}>
+          <ListItemIcon>
+            <AddCircleOutlineIcon />
+          </ListItemIcon>
+          <ListItemText primary="New Note" />
+        </ListItem>
+      </List>
+      <Divider />
+      <List dense>
         <NextLink href="/notes" passHref>
           <ListItem button>
             <ListItemIcon>
-              <MoveToInboxIcon />
+              <InsertDriveFileIcon />
             </ListItemIcon>
             <ListItemText primary="All Notes" />
           </ListItem>
         </NextLink>
-        <ListItem button onClick={handleNewNoteClick}>
-          <ListItemIcon className={classes.addItemIcon}>
-            <AddCircleOutlineIcon />
-          </ListItemIcon>
-          <ListItemText primary="New Note" className={classes.addItemText} />
-        </ListItem>
+        <NextLink href="/notes/trash" passHref>
+          <ListItem button>
+            <ListItemIcon>
+              <DeleteIcon />
+            </ListItemIcon>
+            <ListItemText primary="Trash" />
+          </ListItem>
+        </NextLink>
       </List>
     </>
   )
@@ -267,6 +277,8 @@ export default function Layout(props) {
           <Typography variant="h6" noWrap>
             {title}
           </Typography>
+          <div className={classes.grow} />
+          {rightMenu}
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer}>
@@ -315,5 +327,5 @@ export default function Layout(props) {
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
   title: PropTypes.string,
-  user: PropTypes.object.isRequired
+  rightMenu: PropTypes.node
 }

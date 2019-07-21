@@ -27,6 +27,7 @@ module.exports = withCSS({
       '/about': { page: '/about' },
       '/login': { page: '/login' },
       '/notes': { page: '/notes' },
+      '/notes/trash': { page: '/notes/trash' },
       '/register': { page: '/register' },
       '/settings': { page: '/settings' }
     }
