@@ -4,8 +4,8 @@ import Container from '@material-ui/core/Container'
 import Loader from '../src/Loader'
 import app from '../src/firebase'
 
-export default function withAuth(WrappedComponent) {
-  function Component(props) {
+export default function withAuth(Component) {
+  function WrappedComponent(props) {
     const loggedIn = !!app.auth().currentUser
 
     const [loading, setLoading] = React.useState(!loggedIn)
@@ -29,15 +29,12 @@ export default function withAuth(WrappedComponent) {
       )
     }
 
-    return <WrappedComponent {...props} />
+    return <Component {...props} />
   }
 
-  Component.getInitialProps = async (ctx) => {
-    return (
-      WrappedComponent.getInitialProps &&
-      (await WrappedComponent.getInitialProps(ctx))
-    )
+  WrappedComponent.getInitialProps = async (ctx) => {
+    return Component.getInitialProps ? await Component.getInitialProps(ctx) : {}
   }
 
-  return Component
+  return WrappedComponent
 }

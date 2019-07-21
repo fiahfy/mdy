@@ -19,7 +19,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import DeleteIcon from '@material-ui/icons/Delete'
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile'
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
+import NoteAddIcon from '@material-ui/icons/NoteAdd'
 import app from '../src/firebase'
 
 import AppBar from '@material-ui/core/AppBar'
@@ -117,6 +117,24 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
+function MyAvatar({ src }) {
+  const classes = useStyles()
+
+  if (src) {
+    return (
+      <ListItemAvatar>
+        <Avatar src={src} />
+      </ListItemAvatar>
+    )
+  } else {
+    return (
+      <ListItemIcon>
+        <AccountCircleIcon className={classes.accountIcon} />
+      </ListItemIcon>
+    )
+  }
+}
+
 export default function Layout(props) {
   const classes = useStyles()
 
@@ -162,22 +180,10 @@ export default function Layout(props) {
     Router.push(`/notes?id=${ref.id}`)
   }
 
-  function MyAvatar({ photoURL }) {
-    console.log('ava', photoURL)
-    if (photoURL) {
-      return (
-        <ListItemAvatar>
-          <Avatar src={photoURL} />
-        </ListItemAvatar>
-      )
-    } else {
-      return (
-        <ListItemIcon>
-          <AccountCircleIcon className={classes.accountIcon} />
-        </ListItemIcon>
-      )
-    }
-  }
+  const listItems = [
+    { Icon: InsertDriveFileIcon, text: 'All Notes', href: '/notes' },
+    { Icon: DeleteIcon, text: 'Trash', href: '/notes/trash' }
+  ]
 
   const drawer = (
     <>
@@ -188,7 +194,7 @@ export default function Layout(props) {
           aria-haspopup="true"
           onClick={handleMenuShow}
         >
-          <MyAvatar photoURL={user.photoURL} />
+          <MyAvatar src={user.photoURL} />
           <ListItemText>
             <Box overflow="hidden" textOverflow="ellipsis">
               {user.displayName}
@@ -225,29 +231,24 @@ export default function Layout(props) {
       <List dense>
         <ListItem button onClick={handleNewNoteClick}>
           <ListItemIcon>
-            <AddCircleOutlineIcon />
+            <NoteAddIcon />
           </ListItemIcon>
           <ListItemText primary="New Note" />
         </ListItem>
       </List>
       <Divider />
       <List dense>
-        <NextLink href="/notes" passHref>
-          <ListItem button>
-            <ListItemIcon>
-              <InsertDriveFileIcon />
-            </ListItemIcon>
-            <ListItemText primary="All Notes" />
-          </ListItem>
-        </NextLink>
-        <NextLink href="/notes/trash" passHref>
-          <ListItem button>
-            <ListItemIcon>
-              <DeleteIcon />
-            </ListItemIcon>
-            <ListItemText primary="Trash" />
-          </ListItem>
-        </NextLink>
+        {(() =>
+          listItems.map(({ Icon, text, href }, i) => (
+            <NextLink key={i} href={href} passHref>
+              <ListItem button selected={Router.pathname === href}>
+                <ListItemIcon>
+                  <Icon />
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItem>
+            </NextLink>
+          )))()}
       </List>
     </>
   )

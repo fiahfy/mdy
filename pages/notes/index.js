@@ -9,12 +9,11 @@ import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
 import IconButton from '@material-ui/core/IconButton'
 import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
 import Typography from '@material-ui/core/Typography'
-import { makeStyles, withStyles } from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles'
 import DeleteIcon from '@material-ui/icons/Delete'
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile'
+import NoteListItem from '../../src/NoteListItem'
 import Layout from '../../src/Layout'
 import Loader from '../../src/Loader'
 import app from '../../src/firebase'
@@ -36,36 +35,16 @@ const styles = () => ({
     '.CodeMirror': {
       border: 'none'
     }
-  },
-  listItemSecondaryText: {
-    display: '-webkit-box',
-    WebkitLineClamp: 2,
-    WebkitBoxOrient: 'vertical',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    minHeight: 40
   }
 })
 
 function Index(props) {
-  const classes = makeStyles(styles)()
-
   const user = app.auth().currentUser
 
   const { id } = props
 
   const [loading, setLoading] = React.useState(true)
   const [notes, setNotes] = React.useState([])
-
-  function title(note) {
-    const match = (note.content || '').match(/# (.*)\n?/)
-    return match && match[1] ? match[1] : '(Untitled)'
-  }
-
-  function body(note) {
-    const replaced = (note.content || '').replace(/# (.*)\n?/, '')
-    return replaced
-  }
 
   useEffect(() => {
     const unsubscribe = app
@@ -90,7 +69,7 @@ function Index(props) {
   }, [user])
 
   return (
-    <Layout user={user} title="All Notes">
+    <Layout title="All Notes">
       <Head>
         <title>All Notes - Mdy</title>
       </Head>
@@ -99,21 +78,9 @@ function Index(props) {
       ) : notes.length ? (
         <List dense>
           {(() =>
-            notes.map((note, i) => (
-              <NextLink key={i} href={`/notes?id=${note.id}`} passHref>
-                <ListItem
-                  alignItems="flex-start"
-                  button
-                  selected={note.id === id}
-                >
-                  <ListItemText
-                    primary={title(note)}
-                    secondary={body(note)}
-                    secondaryTypographyProps={{
-                      className: classes.listItemSecondaryText
-                    }}
-                  />
-                </ListItem>
+            notes.map((note) => (
+              <NextLink key={note.id} href={`/notes?id=${note.id}`} passHref>
+                <NoteListItem button note={note} selected={note.id === id} />
               </NextLink>
             )))()}
         </List>
@@ -164,7 +131,9 @@ class InnerShow extends Component {
     await app
       .firestore()
       .doc(`users/${this.user.uid}/notes/${id}`)
-      .delete()
+      .update({
+        deleted_at: new Date()
+      })
     Router.push('/notes')
   }
 
