@@ -3,10 +3,14 @@ import PropTypes from 'prop-types'
 import clsx from 'clsx'
 import NextLink from 'next/link'
 import Router from 'next/router'
+import firebase from 'firebase/app'
+import AppBar from '@material-ui/core/AppBar'
 import Avatar from '@material-ui/core/Avatar'
 import Box from '@material-ui/core/Box'
 import Divider from '@material-ui/core/Divider'
 import Drawer from '@material-ui/core/Drawer'
+import Hidden from '@material-ui/core/Hidden'
+import IconButton from '@material-ui/core/IconButton'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
@@ -14,20 +18,16 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import Menu from '@material-ui/core/Menu'
+import Toolbar from '@material-ui/core/Toolbar'
+import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import DeleteIcon from '@material-ui/icons/Delete'
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile'
+import MenuIcon from '@material-ui/icons/Menu'
 import NoteAddIcon from '@material-ui/icons/NoteAdd'
 import app from '../src/firebase'
-
-import AppBar from '@material-ui/core/AppBar'
-import Hidden from '@material-ui/core/Hidden'
-import IconButton from '@material-ui/core/IconButton'
-import MenuIcon from '@material-ui/icons/Menu'
-import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
 
 const drawerWidth = 240
 
@@ -172,9 +172,8 @@ export default function Layout(props) {
       .firestore()
       .collection(`users/${user.uid}/notes`)
       .add({
-        title: Date.now(),
-        created_at: new Date(),
-        updated_at: new Date(),
+        created_at: firebase.firestore.FieldValue.serverTimestamp(),
+        updated_at: firebase.firestore.FieldValue.serverTimestamp(),
         deleted_at: null
       })
     Router.push(`/notes?id=${ref.id}`)

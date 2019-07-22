@@ -4,6 +4,7 @@ import Head from 'next/head'
 import NextLink from 'next/link'
 import Router from 'next/router'
 import Error from 'next/error'
+import firebase from 'firebase/app'
 import SimpleMDE from 'react-simplemde-editor'
 import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
@@ -117,14 +118,14 @@ class InnerShow extends Component {
     }
 
     this.user = app.auth().currentUser
-    this.debounced = debounce(() => this.update(), 3 * 1000)
+    this.debounced = debounce(() => this.update(), 10 * 1000)
     this.handleTextChange = this.handleTextChange.bind(this)
     this.handleDeleteClick = this.handleDeleteClick.bind(this)
   }
 
   handleTextChange(value) {
     this.setState({ content: value })
-    this.lastUpdatedAt = new Date()
+    this.lastEditedAt = new Date()
     this.timer = this.debounced()
   }
 
@@ -134,7 +135,7 @@ class InnerShow extends Component {
       .firestore()
       .doc(`users/${this.user.uid}/notes/${id}`)
       .update({
-        deleted_at: new Date()
+        deleted_at: firebase.firestore.FieldValue.serverTimestamp()
       })
     Router.push('/notes')
   }
@@ -153,7 +154,8 @@ class InnerShow extends Component {
       .doc(`users/${this.user.uid}/notes/${id}`)
       .update({
         content,
-        updated_at: this.lastUpdatedAt
+        edited_at: this.lastEditedAt,
+        updated_at: firebase.firestore.FieldValue.serverTimestamp()
       })
   }
 
@@ -170,11 +172,10 @@ class InnerShow extends Component {
             ...data,
             id: doc.id
           }
-          const lastUpdatedAt = this.lastUpdatedAt
-          if (
-            !lastUpdatedAt ||
-            note.updated_at.toMillis() > lastUpdatedAt.getTime()
-          ) {
+          if (!this.lastEditedAt) {
+            this.lastEditedAt = note.edited_at.toDate()
+            this.setState({ note, content: note.content || '# ' })
+          } else if (note.edited_at.toMillis() > this.lastEditedAt.getTime()) {
             this.setState({ note, content: note.content || '# ' })
           }
         }
@@ -185,9 +186,7 @@ class InnerShow extends Component {
   componentWillUnmount() {
     this.unsubscribe()
     clearTimeout(this.timer)
-    if (this.lastUpdatedAt) {
-      this.update()
-    }
+    this.update()
   }
 
   render() {

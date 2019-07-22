@@ -1,6 +1,6 @@
 # mdy
 
-> Markdown note-taking application
+> Markdown-based note-taking application 
 
 ## Build Setup
 
@@ -19,7 +19,22 @@ $ yarn start
 $ yarn export
 
 # deploy
-$ deploy:hosting
+$ yarn deploy:hosting
 ```
 
-This project was bootstrapped with [Create Next App](https://github.com/segmentio/create-next-app).
+## Firebase Setup
+
+### Deploy Settings
+```
+# deploy firestore settings (rules and indexes)
+firebase deploy --only firestore
+```
+
+### Create `.env` file
+```
+API_KEY=<apiKey>
+AUTH_DOMAIN=<authDomain>
+DATABASE_URL=<databaseURL>
+PROJECT_ID=<projectId>
+STORAGE_BUCKET=<storageBucket>
+```
