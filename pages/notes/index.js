@@ -8,10 +8,12 @@ import firebase from 'firebase/app'
 import SimpleMDE from 'react-simplemde-editor'
 import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
+import Fab from '@material-ui/core/Fab'
 import IconButton from '@material-ui/core/IconButton'
 import List from '@material-ui/core/List'
 import Typography from '@material-ui/core/Typography'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles, withStyles } from '@material-ui/core/styles'
+import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile'
 import NoteListItem from '../../src/NoteListItem'
@@ -31,15 +33,25 @@ const debounce = (callback, milli) => {
   }
 }
 
-const styles = () => ({
+const styles = (theme) => ({
   '@global': {
     '.CodeMirror': {
       border: 'none'
+    }
+  },
+  fab: {
+    position: 'absolute',
+    bottom: theme.spacing(3),
+    right: theme.spacing(3),
+    [theme.breakpoints.up('sm')]: {
+      display: 'none'
     }
   }
 })
 
 function Index(props) {
+  const classes = makeStyles(styles)()
+
   const user = app.auth().currentUser
 
   const { id } = props
@@ -69,6 +81,31 @@ function Index(props) {
     return () => unsubscribe()
   }, [user])
 
+  function NewNoteFab() {
+    async function handleClick() {
+      const ref = await app
+        .firestore()
+        .collection(`users/${user.uid}/notes`)
+        .add({
+          created_at: firebase.firestore.FieldValue.serverTimestamp(),
+          updated_at: firebase.firestore.FieldValue.serverTimestamp(),
+          deleted_at: null
+        })
+      Router.push(`/notes?id=${ref.id}`)
+    }
+
+    return (
+      <Fab
+        color="primary"
+        aria-label="Add"
+        className={classes.fab}
+        onClick={handleClick}
+      >
+        <AddIcon />
+      </Fab>
+    )
+  }
+
   return (
     <Layout title="All Notes">
       <Head>
@@ -77,14 +114,17 @@ function Index(props) {
       {loading ? (
         <Loader />
       ) : notes.length ? (
-        <List dense>
-          {(() =>
-            notes.map((note) => (
-              <NextLink key={note.id} href={`/notes?id=${note.id}`} passHref>
-                <NoteListItem button note={note} selected={note.id === id} />
-              </NextLink>
-            )))()}
-        </List>
+        <>
+          <List dense>
+            {(() =>
+              notes.map((note) => (
+                <NextLink key={note.id} href={`/notes?id=${note.id}`} passHref>
+                  <NoteListItem button note={note} selected={note.id === id} />
+                </NextLink>
+              )))()}
+          </List>
+          <NewNoteFab />
+        </>
       ) : (
         <Container component="main">
           <Box mt={8} display="flex" flexDirection="column" alignItems="center">
@@ -98,6 +138,7 @@ function Index(props) {
               Create a note and it will show up here.
             </Typography>
           </Box>
+          <NewNoteFab />
         </Container>
       )}
     </Layout>
@@ -173,9 +214,12 @@ class InnerShow extends Component {
             id: doc.id
           }
           if (!this.lastEditedAt) {
-            this.lastEditedAt = note.edited_at.toDate()
+            this.lastEditedAt = new Date()
             this.setState({ note, content: note.content || '# ' })
-          } else if (note.edited_at.toMillis() > this.lastEditedAt.getTime()) {
+          } else if (
+            note.edited_at &&
+            note.edited_at.toMillis() > this.lastEditedAt.getTime()
+          ) {
             this.setState({ note, content: note.content || '# ' })
           }
         }

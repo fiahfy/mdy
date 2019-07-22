@@ -19,7 +19,7 @@ $ yarn start
 $ yarn export
 
 # deploy
-$ yarn deploy:hosting
+$ yarn deploy
 ```
 
 ## Firebase Setup

@@ -34,9 +34,11 @@
   },
   "scripts": {
     "build": "next build",
+    "deploy": "firebase deploy --only hosting",
     "dev": "next",
     "export": "next export",
     "lint": "eslint -f codeframe --ignore-path .gitignore .",
+    "release": "npm run build && npm run export && npm run deploy",
     "start": "next start",
     "test": "npm run lint"
   }
