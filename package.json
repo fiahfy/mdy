@@ -1,13 +1,45 @@
 {
-  "name": "create-next-example-app",
-  "scripts": {
-    "dev": "next",
-    "build": "next build",
-    "start": "next start"
+  "name": "mdy",
+  "description": "Markdown note-taking application",
+  "version": "0.0.1",
+  "author": {
+    "name": "fiahfy",
+    "email": "d.fiahfy@gmail.com",
+    "url": "http://fiahfy.blogspot.com/"
   },
   "dependencies": {
+    "@material-ui/core": "^4.2.0",
+    "@material-ui/icons": "^4.2.1",
+    "@material-ui/styles": "^4.2.0",
+    "@zeit/next-css": "^1.0.1",
+    "dotenv-webpack": "^1.7.0",
+    "firebase": "^6.3.0",
     "next": "^9.0.1",
     "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react-dom": "^16.8.6",
+    "react-simplemde-editor": "^4.0.3"
+  },
+  "devDependencies": {
+    "eslint": "^6.0.1",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-react": "^7.14.2",
+    "husky": "^3.0.0",
+    "prettier": "^1.18.2"
+  },
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fiahfy/mdy"
+  },
+  "scripts": {
+    "build": "next build",
+    "deploy": "firebase deploy --only hosting",
+    "dev": "next",
+    "export": "next export",
+    "lint": "eslint -f codeframe --ignore-path .gitignore .",
+    "release": "npm run build && npm run export && npm run deploy",
+    "start": "next start",
+    "test": "npm run lint"
   }
 }
