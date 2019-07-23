@@ -140,7 +140,7 @@ export default function Layout(props) {
 
   const user = app.auth().currentUser
 
-  const { title, rightMenu } = props
+  const { title, menu } = props
 
   const [mobileOpen, setMobileOpen] = React.useState(false)
   const [anchorEl, setAnchorEl] = React.useState(null)
@@ -278,11 +278,11 @@ export default function Layout(props) {
             {title}
           </Typography>
           <div className={classes.grow} />
-          {rightMenu}
+          {menu}
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer}>
-        <Hidden smUp implementation="css">
+        <Hidden smUp>
           <Drawer
             variant="persistent"
             anchor="left"
@@ -294,7 +294,7 @@ export default function Layout(props) {
             {drawer}
           </Drawer>
         </Hidden>
-        <Hidden xsDown implementation="css">
+        <Hidden xsDown>
           <Drawer
             variant="permanent"
             open
@@ -327,5 +327,5 @@ export default function Layout(props) {
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
   title: PropTypes.string,
-  rightMenu: PropTypes.node
+  menu: PropTypes.node
 }

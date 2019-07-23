@@ -251,7 +251,7 @@ class InnerShow extends Component {
     return (
       <Layout
         title={this.title()}
-        rightMenu={
+        menu={
           <IconButton
             aria-label="Delete Note"
             edge="end"

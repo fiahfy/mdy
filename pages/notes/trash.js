@@ -53,7 +53,7 @@ function Trash() {
   return (
     <Layout
       title="Trash"
-      rightMenu={
+      menu={
         <IconButton
           aria-label="Delete Note"
           edge="end"
