@@ -1,6 +1,6 @@
 # mdy
 
-> Markdown-based note-taking application 
+> Markdown-based note-taking application.
 
 ## Build Setup
 
@@ -18,7 +18,7 @@ $ yarn start
 # generate static project
 $ yarn export
 
-# deploy
+# deploy to Firebase Hosting
 $ yarn deploy
 ```
 

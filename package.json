@@ -32,6 +32,12 @@
     "type": "git",
     "url": "https://github.com/fiahfy/mdy"
   },
+  "keywords": [
+    "firebase",
+    "material-ui",
+    "next",
+    "react"
+  ],
   "scripts": {
     "build": "next build",
     "deploy": "firebase deploy --only hosting",
