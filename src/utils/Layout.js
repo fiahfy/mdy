@@ -27,7 +27,7 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile'
 import MenuIcon from '@material-ui/icons/Menu'
 import NoteAddIcon from '@material-ui/icons/NoteAdd'
-import app from '../src/firebase'
+import app from './firebase'
 
 const drawerWidth = 240
 

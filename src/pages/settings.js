@@ -5,9 +5,9 @@ import Button from '@material-ui/core/Button'
 import Container from '@material-ui/core/Container'
 import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
-import Layout from '../src/Layout'
-import app from '../src/firebase'
-import withAuth from '../src/withAuth'
+import Layout from '../utils/Layout'
+import app from '../utils/firebase'
+import withAuth from '../utils/withAuth'
 
 const useStyles = makeStyles((theme) => ({
   avatar: {

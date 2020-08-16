@@ -1,5 +1,6 @@
 import React from 'react'
 import Router from 'next/router'
+import firebase from 'firebase/app'
 import Avatar from '@material-ui/core/Avatar'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
@@ -10,8 +11,8 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
-import withAuth from '../src/withAuth'
-import app from '../src/firebase'
+import app from '../utils/firebase'
+import withAuth from '../utils/withAuth'
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -27,15 +28,20 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-function SignUp() {
+function SignIn() {
   const classes = useStyles()
 
-  const [displayName, setDisplayName] = React.useState('')
   const [email, setEmail] = React.useState('')
   const [password, setPassword] = React.useState('')
 
-  function handleDisplayNameChange(e) {
-    setDisplayName(e.target.value)
+  async function afterSignIn() {
+    const user = app.auth().currentUser
+    await app
+      .firestore()
+      .collection('users')
+      .doc(user.uid)
+      .set({ uid: user.uid })
+    Router.push('/notes')
   }
 
   function handleEmailChange(e) {
@@ -48,9 +54,14 @@ function SignUp() {
 
   async function handleSubmit(e) {
     e.preventDefault()
-    await app.auth().createUserWithEmailAndPassword(email, password)
-    await app.auth().currentUser.updateProfile({ displayName })
-    Router.push('/notes')
+    await app.auth().signInWithEmailAndPassword(email, password)
+    await afterSignIn()
+  }
+
+  async function handleClick() {
+    const provider = new firebase.auth.GithubAuthProvider()
+    await app.auth().signInWithPopup(provider)
+    await afterSignIn()
   }
 
   return (
@@ -60,22 +71,9 @@ function SignUp() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign up
+          Sign in
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit}>
-          <TextField
-            id="nickname"
-            name="nickname"
-            label="Display Name"
-            autoComplete="nickname"
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            autoFocus
-            onChange={handleDisplayNameChange}
-            value={displayName}
-          />
           <TextField
             id="email"
             name="email"
@@ -86,6 +84,7 @@ function SignUp() {
             margin="normal"
             required
             fullWidth
+            autoFocus
             onChange={handleEmailChange}
             value={email}
           />
@@ -109,12 +108,27 @@ function SignUp() {
             color="primary"
             className={classes.submit}
           >
-            Sign Up
+            Sign In
           </Button>
-          <Grid container justify="flex-end">
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            margin="normal"
+            className={classes.submit}
+            onClick={handleClick}
+          >
+            Sign In with GitHub
+          </Button>
+          <Grid container>
+            <Grid item xs>
+              <Link href="/password-reset" variant="body2">
+                Forgot password?
+              </Link>
+            </Grid>
             <Grid item>
-              <Link href="/" variant="body2">
-                Already have an account? Sign in
+              <Link href="/register" variant="body2">
+                {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
           </Grid>
@@ -124,4 +138,4 @@ function SignUp() {
   )
 }
 
-export default withAuth()(SignUp)
+export default withAuth()(SignIn)

@@ -1,10 +1,10 @@
 import React from 'react'
-import App, { Container } from 'next/app'
+import App from 'next/app'
 import Head from 'next/head'
 import 'easymde/dist/easymde.min.css'
 import { ThemeProvider } from '@material-ui/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
-import theme from '../src/theme'
+import theme from '../utils/theme'
 
 class MyApp extends App {
   async componentDidMount() {
@@ -19,7 +19,7 @@ class MyApp extends App {
     const { Component, pageProps } = this.props
 
     return (
-      <Container>
+      <>
         <Head>
           <title>Mdy</title>
         </Head>
@@ -28,7 +28,7 @@ class MyApp extends App {
           <CssBaseline />
           <Component {...pageProps} />
         </ThemeProvider>
-      </Container>
+      </>
     )
   }
 }

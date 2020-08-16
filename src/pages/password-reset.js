@@ -7,8 +7,8 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import EmailOutlinedIcon from '@material-ui/icons/EmailOutlined'
-import withAuth from '../src/withAuth'
-import app from '../src/firebase'
+import withAuth from '../utils/withAuth'
+import app from '../utils/firebase'
 
 const useStyles = makeStyles((theme) => ({
   avatar: {

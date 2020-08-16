@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import Router from 'next/router'
 import Container from '@material-ui/core/Container'
-import Loader from '../src/Loader'
-import app from '../src/firebase'
+import Loader from './Loader'
+import app from './firebase'
 
 export default function withAuth(required = false) {
   return (Component) => {

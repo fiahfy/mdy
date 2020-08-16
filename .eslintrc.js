@@ -1,17 +1,7 @@
 module.exports = {
   root: true,
-  parserOptions: {
-    ecmaVersion: 2018,
-    sourceType: 'module'
-  },
   env: {
-    browser: true,
-    node: true
+    node: true,
   },
-  extends: [
-    'eslint:recommended',
-    'plugin:prettier/recommended',
-    'plugin:react/recommended',
-    'prettier/react'
-  ]
+  extends: ['@fiahfy/react'],
 }

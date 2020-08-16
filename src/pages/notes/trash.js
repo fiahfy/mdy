@@ -7,11 +7,11 @@ import List from '@material-ui/core/List'
 import Typography from '@material-ui/core/Typography'
 import DeleteIcon from '@material-ui/icons/Delete'
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep'
-import NoteListItem from '../../src/NoteListItem'
-import Layout from '../../src/Layout'
-import Loader from '../../src/Loader'
-import app from '../../src/firebase'
-import withAuth from '../../src/withAuth'
+import NoteListItem from '../../utils/NoteListItem'
+import Layout from '../../utils/Layout'
+import Loader from '../../utils/Loader'
+import app from '../../utils/firebase'
+import withAuth from '../../utils/withAuth'
 
 function Trash() {
   const user = app.auth().currentUser
