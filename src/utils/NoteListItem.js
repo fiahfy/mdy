@@ -11,12 +11,12 @@ const useStyles = makeStyles(() => ({
     WebkitBoxOrient: 'vertical',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    minHeight: 40
-  }
+    minHeight: 40,
+  },
 }))
 
 // eslint-disable-next-line react/display-name
-const NoteListItem = React.forwardRef(function(props, ref) {
+const NoteListItem = React.forwardRef(function (props, ref) {
   const classes = useStyles()
 
   const { note } = props
@@ -36,11 +36,11 @@ const NoteListItem = React.forwardRef(function(props, ref) {
       <ListItemText
         primary={title()}
         primaryTypographyProps={{
-          variant: 'subtitle1'
+          variant: 'subtitle1',
         }}
         secondary={body()}
         secondaryTypographyProps={{
-          className: classes.listItemSecondaryText
+          className: classes.listItemSecondaryText,
         }}
       />
     </ListItem>
@@ -48,12 +48,12 @@ const NoteListItem = React.forwardRef(function(props, ref) {
 })
 
 NoteListItem.defaultProps = {
-  selected: false
+  selected: false,
 }
 
 NoteListItem.propTypes = {
   note: PropTypes.object.isRequired,
-  selected: PropTypes.bool
+  selected: PropTypes.bool,
 }
 
 export default NoteListItem

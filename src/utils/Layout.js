@@ -27,41 +27,41 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile'
 import MenuIcon from '@material-ui/icons/Menu'
 import NoteAddIcon from '@material-ui/icons/NoteAdd'
-import app from './firebase'
+import app from '../firebase'
 
 const drawerWidth = 240
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex'
+    display: 'flex',
   },
   rootShift: {
     [theme.breakpoints.down('xs')]: {
-      overflow: 'hidden'
-    }
+      overflow: 'hidden',
+    },
   },
   drawer: {
     width: drawerWidth,
-    flexShrink: 0
+    flexShrink: 0,
   },
   drawerPaper: {
-    width: drawerWidth
+    width: drawerWidth,
   },
   accountIcon: {
     width: 40,
-    height: 40
+    height: 40,
   },
   appBar: {
     [theme.breakpoints.up('sm')]: {
       marginLeft: drawerWidth,
-      width: `calc(100% - ${drawerWidth}px)`
+      width: `calc(100% - ${drawerWidth}px)`,
     },
     [theme.breakpoints.down('xs')]: {
       transition: theme.transitions.create(['margin', 'width'], {
         easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen
-      })
-    }
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+    },
   },
   appBarShift: {
     [theme.breakpoints.down('xs')]: {
@@ -69,18 +69,18 @@ const useStyles = makeStyles((theme) => ({
       width: `calc(100% - ${drawerWidth}px)`,
       transition: theme.transitions.create(['margin', 'width'], {
         easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen
-      })
-    }
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    },
   },
   menuButton: {
     marginRight: theme.spacing(2),
     [theme.breakpoints.up('sm')]: {
-      display: 'none'
-    }
+      display: 'none',
+    },
   },
   grow: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   toolbar: theme.mixins.toolbar,
   content: {
@@ -89,18 +89,18 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: -drawerWidth,
       transition: theme.transitions.create('margin', {
         easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen
-      })
-    }
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+    },
   },
   contentShift: {
     [theme.breakpoints.down('xs')]: {
       marginLeft: 0,
       transition: theme.transitions.create('margin', {
         easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen
-      })
-    }
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    },
   },
   mask: {
     position: 'absolute',
@@ -108,13 +108,13 @@ const useStyles = makeStyles((theme) => ({
     bottom: 0,
     left: 0,
     right: 0,
-    display: 'none'
+    display: 'none',
   },
   maskShift: {
     [theme.breakpoints.down('xs')]: {
-      display: 'block'
-    }
-  }
+      display: 'block',
+    },
+  },
 }))
 
 function MyAvatar({ src }) {
@@ -174,14 +174,14 @@ export default function Layout(props) {
       .add({
         created_at: firebase.firestore.FieldValue.serverTimestamp(),
         updated_at: firebase.firestore.FieldValue.serverTimestamp(),
-        deleted_at: null
+        deleted_at: null,
       })
     Router.push(`/notes?id=${ref.id}`)
   }
 
   const listItems = [
     { Icon: InsertDriveFileIcon, text: 'All Notes', href: '/notes' },
-    { Icon: DeleteIcon, text: 'Trash', href: '/notes/trash' }
+    { Icon: DeleteIcon, text: 'Trash', href: '/notes/trash' },
   ]
 
   const drawer = (
@@ -208,7 +208,7 @@ export default function Layout(props) {
           anchorEl={anchorEl}
           anchorOrigin={{
             vertical: 'bottom',
-            horizontal: 'left'
+            horizontal: 'left',
           }}
           getContentAnchorEl={null}
           keepMounted
@@ -255,13 +255,13 @@ export default function Layout(props) {
   return (
     <div
       className={clsx(classes.root, {
-        [classes.rootShift]: mobileOpen
+        [classes.rootShift]: mobileOpen,
       })}
     >
       <AppBar
         position="fixed"
         className={clsx(classes.appBar, {
-          [classes.appBarShift]: mobileOpen
+          [classes.appBarShift]: mobileOpen,
         })}
       >
         <Toolbar>
@@ -288,7 +288,7 @@ export default function Layout(props) {
             anchor="left"
             open={mobileOpen}
             classes={{
-              paper: classes.drawerPaper
+              paper: classes.drawerPaper,
             }}
           >
             {drawer}
@@ -299,7 +299,7 @@ export default function Layout(props) {
             variant="permanent"
             open
             classes={{
-              paper: classes.drawerPaper
+              paper: classes.drawerPaper,
             }}
           >
             {drawer}
@@ -308,14 +308,14 @@ export default function Layout(props) {
       </nav>
       <main
         className={clsx(classes.content, {
-          [classes.contentShift]: mobileOpen
+          [classes.contentShift]: mobileOpen,
         })}
       >
         <div className={classes.toolbar} />
         {props.children}
         <div
           className={clsx(classes.mask, {
-            [classes.maskShift]: mobileOpen
+            [classes.maskShift]: mobileOpen,
           })}
           onClick={handleDrawerClose}
         />
@@ -327,5 +327,5 @@ export default function Layout(props) {
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
   title: PropTypes.string,
-  menu: PropTypes.node
+  menu: PropTypes.node,
 }

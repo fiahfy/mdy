@@ -19,7 +19,7 @@ import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile'
 import NoteListItem from '../../utils/NoteListItem'
 import Layout from '../../utils/Layout'
 import Loader from '../../utils/Loader'
-import app from '../../utils/firebase'
+import app from '../../firebase'
 import withAuth from '../../utils/withAuth'
 
 const debounce = (callback, milli) => {
@@ -36,17 +36,17 @@ const debounce = (callback, milli) => {
 const styles = (theme) => ({
   '@global': {
     '.CodeMirror': {
-      border: 'none'
-    }
+      border: 'none',
+    },
   },
   fab: {
     position: 'absolute',
     bottom: theme.spacing(3),
     right: theme.spacing(3),
     [theme.breakpoints.up('sm')]: {
-      display: 'none'
-    }
-  }
+      display: 'none',
+    },
+  },
 })
 
 function Index(props) {
@@ -71,7 +71,7 @@ function Index(props) {
           const data = doc.data()
           return {
             ...data,
-            id: doc.id
+            id: doc.id,
           }
         })
         setNotes(notes)
@@ -89,7 +89,7 @@ function Index(props) {
         .add({
           created_at: firebase.firestore.FieldValue.serverTimestamp(),
           updated_at: firebase.firestore.FieldValue.serverTimestamp(),
-          deleted_at: null
+          deleted_at: null,
         })
       Router.push(`/notes?id=${ref.id}`)
     }
@@ -146,7 +146,7 @@ function Index(props) {
 }
 
 Index.propTypes = {
-  id: PropTypes.string
+  id: PropTypes.string,
 }
 
 class InnerShow extends Component {
@@ -155,7 +155,7 @@ class InnerShow extends Component {
     this.state = {
       loading: true,
       note: null,
-      content: ''
+      content: '',
     }
 
     this.user = app.auth().currentUser
@@ -172,12 +172,9 @@ class InnerShow extends Component {
 
   async handleDeleteClick() {
     const { id } = this.props
-    await app
-      .firestore()
-      .doc(`users/${this.user.uid}/notes/${id}`)
-      .update({
-        deleted_at: firebase.firestore.FieldValue.serverTimestamp()
-      })
+    await app.firestore().doc(`users/${this.user.uid}/notes/${id}`).update({
+      deleted_at: firebase.firestore.FieldValue.serverTimestamp(),
+    })
     Router.push('/notes')
   }
 
@@ -190,14 +187,11 @@ class InnerShow extends Component {
   async update() {
     const { id } = this.props
     const { content } = this.state
-    await app
-      .firestore()
-      .doc(`users/${this.user.uid}/notes/${id}`)
-      .update({
-        content,
-        edited_at: this.lastEditedAt,
-        updated_at: firebase.firestore.FieldValue.serverTimestamp()
-      })
+    await app.firestore().doc(`users/${this.user.uid}/notes/${id}`).update({
+      content,
+      edited_at: this.lastEditedAt,
+      updated_at: firebase.firestore.FieldValue.serverTimestamp(),
+    })
   }
 
   componentDidMount() {
@@ -211,7 +205,7 @@ class InnerShow extends Component {
           const data = doc.data()
           const note = {
             ...data,
-            id: doc.id
+            id: doc.id,
           }
           if (!this.lastEditedAt) {
             this.lastEditedAt = new Date()
@@ -275,7 +269,7 @@ class InnerShow extends Component {
               placeholder: '# Title',
               autofocus: true,
               toolbar: false,
-              status: false
+              status: false,
             }}
           />
         </Box>
@@ -285,7 +279,7 @@ class InnerShow extends Component {
 }
 
 InnerShow.propTypes = {
-  id: PropTypes.string.isRequired
+  id: PropTypes.string.isRequired,
 }
 
 const Show = withStyles(styles)(InnerShow)
@@ -299,7 +293,7 @@ function Notes(props) {
 }
 
 Notes.propTypes = {
-  id: PropTypes.string
+  id: PropTypes.string,
 }
 
 Notes.getInitialProps = ({ query }) => {

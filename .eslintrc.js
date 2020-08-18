@@ -4,4 +4,8 @@ module.exports = {
     node: true,
   },
   extends: ['@fiahfy/react'],
+  rules: {
+    'react/display-name': 'off',
+    'react/prop-types': 'off',
+  },
 }

@@ -10,7 +10,7 @@ import DeleteSweepIcon from '@material-ui/icons/DeleteSweep'
 import NoteListItem from '../../utils/NoteListItem'
 import Layout from '../../utils/Layout'
 import Loader from '../../utils/Loader'
-import app from '../../utils/firebase'
+import app from '../../firebase'
 import withAuth from '../../utils/withAuth'
 
 function Trash() {
@@ -40,7 +40,7 @@ function Trash() {
           const data = doc.data()
           return {
             ...data,
-            id: doc.id
+            id: doc.id,
           }
         })
         setNotes(notes)

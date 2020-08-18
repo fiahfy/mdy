@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import Router from 'next/router'
 import Container from '@material-ui/core/Container'
 import Loader from './Loader'
-import app from './firebase'
+import app from '../firebase'
 
 export default function withAuth(required = false) {
   return (Component) => {
@@ -23,7 +23,7 @@ export default function withAuth(required = false) {
         })
 
         return () => unsubscribe()
-      })
+      }, [])
 
       if (loading) {
         return (

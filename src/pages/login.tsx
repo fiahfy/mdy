@@ -1,41 +1,44 @@
 import React from 'react'
+import { NextPage } from 'next'
 import Router from 'next/router'
 import firebase from 'firebase/app'
 import Avatar from '@material-ui/core/Avatar'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
 import Container from '@material-ui/core/Container'
-import Link from '@material-ui/core/Link'
 import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
-import app from '../utils/firebase'
-import withAuth from '../utils/withAuth'
+import Link from '~/components/Link'
+import app from '../firebase'
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
+    backgroundColor: theme.palette.secondary.main,
   },
   form: {
     width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2)
-  }
+    margin: theme.spacing(3, 0, 2),
+  },
 }))
 
-function SignIn() {
+const SignIn: NextPage = () => {
   const classes = useStyles()
 
   const [email, setEmail] = React.useState('')
   const [password, setPassword] = React.useState('')
 
-  async function afterSignIn() {
+  const afterSignIn = async () => {
     const user = app.auth().currentUser
+    if (!user) {
+      return
+    }
     await app
       .firestore()
       .collection('users')
@@ -44,21 +47,21 @@ function SignIn() {
     Router.push('/notes')
   }
 
-  function handleEmailChange(e) {
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value)
   }
 
-  function handlePasswordChange(e) {
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value)
   }
 
-  async function handleSubmit(e) {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     await app.auth().signInWithEmailAndPassword(email, password)
     await afterSignIn()
   }
 
-  async function handleClick() {
+  const handleClick = async () => {
     const provider = new firebase.auth.GithubAuthProvider()
     await app.auth().signInWithPopup(provider)
     await afterSignIn()
@@ -66,7 +69,7 @@ function SignIn() {
 
   return (
     <Container component="main" maxWidth="xs">
-      <Box mt={8} display="flex" flexDirection="column" alignItems="center">
+      <Box my={8} display="flex" flexDirection="column" alignItems="center">
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
@@ -114,7 +117,6 @@ function SignIn() {
             fullWidth
             variant="contained"
             color="primary"
-            margin="normal"
             className={classes.submit}
             onClick={handleClick}
           >
@@ -138,4 +140,4 @@ function SignIn() {
   )
 }
 
-export default withAuth()(SignIn)
+export default SignIn
