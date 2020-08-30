@@ -8,10 +8,10 @@ import Typography from '@material-ui/core/Typography'
 import DeleteIcon from '@material-ui/icons/Delete'
 import DeleteSweepIcon from '@material-ui/icons/DeleteSweep'
 import NoteListItem from '../../utils/NoteListItem'
-import Layout from '../../utils/Layout'
-import Loader from '../../utils/Loader'
+import Layout from '../../components/Layout'
+import Loader from '../../components/Loader'
 import app from '../../firebase'
-import withAuth from '../../utils/withAuth'
+import withAuth from '../../hoc/withAuth'
 
 function Trash() {
   const user = app.auth().currentUser

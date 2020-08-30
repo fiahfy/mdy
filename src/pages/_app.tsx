@@ -5,7 +5,7 @@ import 'easymde/dist/easymde.min.css'
 import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import theme from '~/theme'
-import UserProvider from '../context/userContext'
+import { UserProvider } from '../hooks/useUser'
 
 export default function MyApp(props: AppProps): JSX.Element {
   const { Component, pageProps } = props

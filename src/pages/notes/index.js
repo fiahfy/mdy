@@ -17,10 +17,10 @@ import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile'
 import NoteListItem from '../../utils/NoteListItem'
-import Layout from '../../utils/Layout'
-import Loader from '../../utils/Loader'
+import Layout from '../../components/Layout'
+import Loader from '../../components/Loader'
 import app from '../../firebase'
-import withAuth from '../../utils/withAuth'
+import withAuth from '../../hoc/withAuth'
 
 const debounce = (callback, milli) => {
   let timer
@@ -264,7 +264,7 @@ class InnerShow extends Component {
             value={content}
             onChange={this.handleTextChange}
             options={{
-              minHeight: `${window.innerHeight}px`,
+              minHeight: `${window.innerHeight}px`, // eslint-disable-line no-undef
               indentWithTabs: false,
               placeholder: '# Title',
               autofocus: true,

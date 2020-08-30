@@ -1,7 +1,6 @@
 import React from 'react'
 import { NextPage } from 'next'
-import Router from 'next/router'
-import firebase from 'firebase/app'
+import { useRouter } from 'next/router'
 import Avatar from '@material-ui/core/Avatar'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
@@ -12,7 +11,8 @@ import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Link from '~/components/Link'
-import app from '../firebase'
+import useFirebase from '~/hooks/useFirebase'
+import withAuth from '~/hoc/withAuth'
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -30,40 +30,46 @@ const useStyles = makeStyles((theme) => ({
 
 const SignIn: NextPage = () => {
   const classes = useStyles()
+  const router = useRouter()
+  const firebase = useFirebase()
 
-  const [email, setEmail] = React.useState('')
-  const [password, setPassword] = React.useState('')
+  const [formValues, setFormValues] = React.useState({
+    email: '',
+    password: '',
+  })
 
   const afterSignIn = async () => {
-    const user = app.auth().currentUser
+    const user = firebase.auth().currentUser
     if (!user) {
       return
     }
-    await app
+    await firebase
       .firestore()
       .collection('users')
       .doc(user.uid)
       .set({ uid: user.uid })
-    Router.push('/notes')
+    router.push('/notes')
   }
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value)
-  }
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value)
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormValues((formValues) => ({
+      ...formValues,
+      [name]: value,
+    }))
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    await app.auth().signInWithEmailAndPassword(email, password)
+    await firebase
+      .auth()
+      .signInWithEmailAndPassword(formValues.email, formValues.password)
     await afterSignIn()
   }
 
   const handleClick = async () => {
     const provider = new firebase.auth.GithubAuthProvider()
-    await app.auth().signInWithPopup(provider)
+    await firebase.auth().signInWithPopup(provider)
     await afterSignIn()
   }
 
@@ -88,8 +94,8 @@ const SignIn: NextPage = () => {
             required
             fullWidth
             autoFocus
-            onChange={handleEmailChange}
-            value={email}
+            onChange={handleChange}
+            value={formValues.email}
           />
           <TextField
             id="password"
@@ -101,8 +107,8 @@ const SignIn: NextPage = () => {
             margin="normal"
             required
             fullWidth
-            onChange={handlePasswordChange}
-            value={password}
+            onChange={handleChange}
+            value={formValues.password}
           />
           <Button
             type="submit"
@@ -140,4 +146,4 @@ const SignIn: NextPage = () => {
   )
 }
 
-export default SignIn
+export default withAuth()(SignIn)

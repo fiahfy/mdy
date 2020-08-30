@@ -1,13 +1,15 @@
 import React from 'react'
+import { NextPage } from 'next'
 import Head from 'next/head'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
 import Container from '@material-ui/core/Container'
 import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
-import Layout from '../utils/Layout'
-import app from '../firebase'
-import withAuth from '../utils/withAuth'
+import useFirebase from '~/hooks/useFirebase'
+import useUser from '~/hooks/useUser'
+import Layout from '../components/Layout'
+import withAuth from '~/hoc/withAuth'
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -23,31 +25,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-function Settings() {
+const Settings: NextPage = () => {
   const classes = useStyles()
+  const firebase = useFirebase()
+  const { user } = useUser()
 
-  const user = app.auth().currentUser
+  const [formValues, setFormValues] = React.useState({
+    displayName: user?.displayName ?? '',
+    photoURL: user?.photoURL ?? '',
+  })
 
-  const [displayName, setDisplayName] = React.useState(user.displayName || '')
-  const [photoURL, setPhotoURL] = React.useState(user.photoURL || '')
-  const [, updateState] = React.useState()
-  const forceUpdate = React.useCallback(() => updateState({}), [])
-
-  function handleDisplayNameChange(e) {
-    setDisplayName(e.target.value)
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormValues((formValues) => ({
+      ...formValues,
+      [name]: value,
+    }))
   }
 
-  function handlePhotoURLChange(e) {
-    setPhotoURL(e.target.value)
-  }
-
-  async function handleSubmit(e) {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    await app.auth().currentUser.updateProfile({
-      displayName,
-      photoURL,
+    await firebase.auth().currentUser?.updateProfile({
+      displayName: formValues.displayName,
+      photoURL: formValues.photoURL,
     })
-    forceUpdate()
   }
 
   return (
@@ -68,8 +69,8 @@ function Settings() {
               required
               fullWidth
               autoFocus
-              onChange={handleDisplayNameChange}
-              value={displayName}
+              onChange={handleChange}
+              value={formValues.displayName}
             />
             <TextField
               id="photo"
@@ -80,8 +81,8 @@ function Settings() {
               variant="outlined"
               margin="normal"
               fullWidth
-              onChange={handlePhotoURLChange}
-              value={photoURL}
+              onChange={handleChange}
+              value={formValues.photoURL}
             />
             <Button
               type="submit"

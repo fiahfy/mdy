@@ -7,7 +7,7 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import EmailOutlinedIcon from '@material-ui/icons/EmailOutlined'
-import withAuth from '../utils/withAuth'
+import withAuth from '../hoc/withAuth'
 import app from '../firebase'
 
 const useStyles = makeStyles((theme) => ({

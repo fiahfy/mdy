@@ -1,9 +1,7 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import clsx from 'clsx'
 import NextLink from 'next/link'
 import Router from 'next/router'
-import firebase from 'firebase/app'
 import AppBar from '@material-ui/core/AppBar'
 import Avatar from '@material-ui/core/Avatar'
 import Box from '@material-ui/core/Box'
@@ -27,7 +25,8 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile'
 import MenuIcon from '@material-ui/icons/Menu'
 import NoteAddIcon from '@material-ui/icons/NoteAdd'
-import app from '../firebase'
+import useFirebase from '~/hooks/useFirebase'
+import useUser from '~/hooks/useUser'
 
 const drawerWidth = 240
 
@@ -117,7 +116,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-function MyAvatar({ src }) {
+const MyAvatar: React.FC<{ src: string | null }> = (props) => {
+  const { src } = props
+
   const classes = useStyles()
 
   if (src) {
@@ -135,40 +136,44 @@ function MyAvatar({ src }) {
   }
 }
 
-export default function Layout(props) {
+const Layout: React.FC<{ title: string }> = (props) => {
+  const { title } = props
+
   const classes = useStyles()
-
-  const user = app.auth().currentUser
-
-  const { title, menu } = props
+  const firebase = useFirebase()
+  const { user } = useUser()
 
   const [mobileOpen, setMobileOpen] = React.useState(false)
-  const [anchorEl, setAnchorEl] = React.useState(null)
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
 
-  function handleDrawerToggle() {
+  if (!user) {
+    return null
+  }
+
+  const handleClickMenuButton = () => {
     setMobileOpen(!mobileOpen)
   }
 
-  function handleDrawerClose(e) {
+  const handleClickMask = (e: React.MouseEvent) => {
     e.stopPropagation()
     setMobileOpen(false)
   }
 
-  function handleMenuShow(e) {
+  const handleClickAccount = (e: React.MouseEvent<HTMLDivElement>) => {
     setAnchorEl(e.currentTarget)
   }
 
-  function handleMenuClose() {
+  const handleCloseMenu = () => {
     setAnchorEl(null)
   }
 
-  async function handleSignOut() {
-    await app.auth().signOut()
+  const handleClickSignOut = async () => {
+    await firebase.auth().signOut()
     Router.push('/')
   }
 
-  async function handleNewNoteClick() {
-    const ref = await app
+  const handleClickNew = async () => {
+    const ref = await firebase
       .firestore()
       .collection(`users/${user.uid}/notes`)
       .add({
@@ -191,7 +196,7 @@ export default function Layout(props) {
           button
           aria-controls="simple-menu"
           aria-haspopup="true"
-          onClick={handleMenuShow}
+          onClick={handleClickAccount}
         >
           <MyAvatar src={user.photoURL} />
           <ListItemText>
@@ -213,7 +218,7 @@ export default function Layout(props) {
           getContentAnchorEl={null}
           keepMounted
           open={Boolean(anchorEl)}
-          onClose={handleMenuClose}
+          onClose={handleCloseMenu}
         >
           <NextLink href="/settings" passHref>
             <ListItem dense button>
@@ -221,14 +226,14 @@ export default function Layout(props) {
             </ListItem>
           </NextLink>
           <Divider />
-          <ListItem dense button onClick={handleSignOut}>
+          <ListItem dense button onClick={handleClickSignOut}>
             <ListItemText primary="Sign out" />
           </ListItem>
         </Menu>
       </List>
       <Divider />
       <List dense>
-        <ListItem button onClick={handleNewNoteClick}>
+        <ListItem button onClick={handleClickNew}>
           <ListItemIcon>
             <NoteAddIcon />
           </ListItemIcon>
@@ -269,7 +274,7 @@ export default function Layout(props) {
             color="inherit"
             aria-label="Open drawer"
             edge="start"
-            onClick={handleDrawerToggle}
+            onClick={handleClickMenuButton}
             className={classes.menuButton}
           >
             <MenuIcon />
@@ -278,7 +283,7 @@ export default function Layout(props) {
             {title}
           </Typography>
           <div className={classes.grow} />
-          {menu}
+          {/* {menu} */}
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer}>
@@ -317,15 +322,11 @@ export default function Layout(props) {
           className={clsx(classes.mask, {
             [classes.maskShift]: mobileOpen,
           })}
-          onClick={handleDrawerClose}
+          onClick={handleClickMask}
         />
       </main>
     </div>
   )
 }
 
-Layout.propTypes = {
-  children: PropTypes.node.isRequired,
-  title: PropTypes.string,
-  menu: PropTypes.node,
-}
+export default Layout

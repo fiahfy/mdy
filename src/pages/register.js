@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Link from '~/components/Link'
-import withAuth from '../utils/withAuth'
+import withAuth from '../hoc/withAuth'
 import app from '../firebase'
 
 const useStyles = makeStyles((theme) => ({
