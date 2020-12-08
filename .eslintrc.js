@@ -3,7 +3,7 @@ module.exports = {
   env: {
     node: true,
   },
-  extends: ['@fiahfy/react'],
+  extends: ['@fiahfy/next'],
   rules: {
     'react/display-name': 'off',
     'react/prop-types': 'off',
