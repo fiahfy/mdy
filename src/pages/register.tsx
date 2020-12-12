@@ -1,6 +1,7 @@
-// TODO:
 import React from 'react'
-import Router from 'next/router'
+import { NextPage } from 'next'
+import { useRouter } from 'next/router'
+import firebase from 'firebase/app'
 import Avatar from '@material-ui/core/Avatar'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
@@ -11,8 +12,7 @@ import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Link from '~/components/Link'
-import withAuth from '../hoc/withAuth'
-import app from '../firebase'
+import withAuth from '~/hoc/withAuth'
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -28,30 +28,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-function Register() {
+const Register: NextPage = () => {
   const classes = useStyles()
+  const router = useRouter()
+  const [formValues, setFormValues] = React.useState({
+    displayName: '',
+    email: '',
+    password: '',
+  })
 
-  const [displayName, setDisplayName] = React.useState('')
-  const [email, setEmail] = React.useState('')
-  const [password, setPassword] = React.useState('')
-
-  function handleDisplayNameChange(e) {
-    setDisplayName(e.target.value)
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormValues((formValues) => ({
+      ...formValues,
+      [name]: value,
+    }))
   }
 
-  function handleEmailChange(e) {
-    setEmail(e.target.value)
-  }
-
-  function handlePasswordChange(e) {
-    setPassword(e.target.value)
-  }
-
-  async function handleSubmit(e) {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    await app.auth().createUserWithEmailAndPassword(email, password)
-    await app.auth().currentUser.updateProfile({ displayName })
-    Router.push('/notes')
+    await firebase
+      .auth()
+      .createUserWithEmailAndPassword(formValues.email, formValues.password)
+    await firebase
+      .auth()
+      .currentUser?.updateProfile({ displayName: formValues.displayName })
+    router.push('/notes')
   }
 
   return (
@@ -72,9 +74,9 @@ function Register() {
             label="Display Name"
             margin="normal"
             name="nickname"
-            onChange={handleDisplayNameChange}
+            onChange={handleChange}
             required
-            value={displayName}
+            value={formValues.displayName}
             variant="outlined"
           />
           <TextField
@@ -84,10 +86,10 @@ function Register() {
             label="Email Address"
             margin="normal"
             name="email"
-            onChange={handleEmailChange}
+            onChange={handleChange}
             required
             type="email"
-            value={email}
+            value={formValues.email}
             variant="outlined"
           />
           <TextField
@@ -97,10 +99,10 @@ function Register() {
             label="Password"
             margin="normal"
             name="password"
-            onChange={handlePasswordChange}
+            onChange={handleChange}
             required
             type="password"
-            value={password}
+            value={formValues.password}
             variant="outlined"
           />
           <Button

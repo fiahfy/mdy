@@ -1,6 +1,6 @@
 // TODO:
 import React, { Component, useEffect } from 'react'
-import PropTypes from 'prop-types'
+import * as PropTypes from 'prop-types'
 import Head from 'next/head'
 import NextLink from 'next/link'
 import Router from 'next/router'

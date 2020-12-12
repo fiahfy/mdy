@@ -1,5 +1,6 @@
-// TODO:
 import React from 'react'
+import { NextPage } from 'next'
+import firebase from 'firebase/app'
 import Avatar from '@material-ui/core/Avatar'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
@@ -8,8 +9,7 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import EmailOutlinedIcon from '@material-ui/icons/EmailOutlined'
-import withAuth from '../hoc/withAuth'
-import app from '../firebase'
+import withAuth from '~/hoc/withAuth'
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -25,19 +25,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-function PasswordReset() {
+const PasswordReset: NextPage = () => {
   const classes = useStyles()
+  const [formValues, setFormValues] = React.useState({
+    email: '',
+  })
 
-  const [email, setEmail] = React.useState('')
-
-  function handleEmailChange(e) {
-    setEmail(e.target.value)
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormValues({ email: e.target.value })
   }
 
-  async function handleSubmit(e) {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    await app.auth().sendPasswordResetEmail(email)
-    setEmail('')
+    await firebase.auth().sendPasswordResetEmail(formValues.email)
+    setFormValues({ email: '' })
   }
 
   return (
@@ -58,10 +59,10 @@ function PasswordReset() {
             label="Email Address"
             margin="normal"
             name="email"
-            onChange={handleEmailChange}
+            onChange={handleChange}
             required
             type="email"
-            value={email}
+            value={formValues.email}
             variant="outlined"
           />
           <Button

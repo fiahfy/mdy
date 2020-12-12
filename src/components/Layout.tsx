@@ -1,8 +1,6 @@
-// TODO:
 import React from 'react'
 import clsx from 'clsx'
-import NextLink from 'next/link'
-import Router from 'next/router'
+import { useRouter } from 'next/router'
 import firebase from 'firebase/app'
 import AppBar from '@material-ui/core/AppBar'
 import Avatar from '@material-ui/core/Avatar'
@@ -15,9 +13,10 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+import ListItemText from '@material-ui/core/ListItemText'
 import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
@@ -27,6 +26,7 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile'
 import MenuIcon from '@material-ui/icons/Menu'
 import NoteAddIcon from '@material-ui/icons/NoteAdd'
+import Link from '~/components/Link'
 import useUser from '~/hooks/useUser'
 
 const drawerWidth = 240
@@ -141,8 +141,8 @@ const Layout: React.FC<{ title: string }> = (props) => {
   const { title } = props
 
   const classes = useStyles()
+  const router = useRouter()
   const { user } = useUser()
-
   const [mobileOpen, setMobileOpen] = React.useState(false)
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
 
@@ -169,7 +169,7 @@ const Layout: React.FC<{ title: string }> = (props) => {
 
   const handleClickSignOut = async () => {
     await firebase.auth().signOut()
-    Router.push('/')
+    router.push('/')
   }
 
   const handleClickNew = async () => {
@@ -181,7 +181,7 @@ const Layout: React.FC<{ title: string }> = (props) => {
         updated_at: firebase.firestore.FieldValue.serverTimestamp(),
         deleted_at: null,
       })
-    Router.push(`/notes?id=${ref.id}`)
+    router.push(`/notes?id=${ref.id}`)
   }
 
   const listItems = [
@@ -191,7 +191,7 @@ const Layout: React.FC<{ title: string }> = (props) => {
 
   const drawer = (
     <>
-      <List dense>
+      <List>
         <ListItem
           aria-controls="simple-menu"
           aria-haspopup="true"
@@ -220,19 +220,14 @@ const Layout: React.FC<{ title: string }> = (props) => {
           onClose={handleCloseMenu}
           open={Boolean(anchorEl)}
         >
-          <NextLink href="/settings" passHref>
-            <ListItem button dense>
-              <ListItemText primary="Settings" />
-            </ListItem>
-          </NextLink>
-          <Divider />
-          <ListItem button dense onClick={handleClickSignOut}>
-            <ListItemText primary="Sign out" />
-          </ListItem>
+          <MenuItem component={Link} href="/settings" naked>
+            Settings
+          </MenuItem>
+          <MenuItem onClick={handleClickSignOut}>Sign out</MenuItem>
         </Menu>
       </List>
       <Divider />
-      <List dense>
+      <List>
         <ListItem button onClick={handleClickNew}>
           <ListItemIcon>
             <NoteAddIcon />
@@ -241,17 +236,22 @@ const Layout: React.FC<{ title: string }> = (props) => {
         </ListItem>
       </List>
       <Divider />
-      <List dense>
+      <List>
         {(() =>
           listItems.map(({ Icon, text, href }, i) => (
-            <NextLink href={href} key={i} passHref>
-              <ListItem button selected={Router.pathname === href}>
-                <ListItemIcon>
-                  <Icon />
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            </NextLink>
+            <ListItem
+              button
+              component={Link}
+              href={href}
+              key={i}
+              naked
+              selected={router.pathname === href}
+            >
+              <ListItemIcon>
+                <Icon />
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItem>
           )))()}
       </List>
     </>

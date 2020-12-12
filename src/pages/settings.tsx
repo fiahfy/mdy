@@ -24,7 +24,6 @@ const useStyles = makeStyles((theme) => ({
 const Settings: NextPage = () => {
   const classes = useStyles()
   const { user } = useUser()
-
   const [formValues, setFormValues] = React.useState({
     displayName: user?.displayName ?? '',
     photoURL: user?.photoURL ?? '',
