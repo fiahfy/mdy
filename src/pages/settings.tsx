@@ -1,21 +1,17 @@
 import React from 'react'
 import { NextPage } from 'next'
 import Head from 'next/head'
+import firebase from 'firebase/app'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
 import Container from '@material-ui/core/Container'
 import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
-import useFirebase from '~/hooks/useFirebase'
-import useUser from '~/hooks/useUser'
-import Layout from '../components/Layout'
+import Layout from '~/components/Layout'
 import withAuth from '~/hoc/withAuth'
+import useUser from '~/hooks/useUser'
 
 const useStyles = makeStyles((theme) => ({
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
@@ -27,7 +23,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Settings: NextPage = () => {
   const classes = useStyles()
-  const firebase = useFirebase()
   const { user } = useUser()
 
   const [formValues, setFormValues] = React.useState({
@@ -57,39 +52,39 @@ const Settings: NextPage = () => {
         <title>Settings - Mdy</title>
       </Head>
       <Container maxWidth="xs">
-        <Box mt={3} display="flex" flexDirection="column" alignItems="center">
+        <Box alignItems="center" display="flex" flexDirection="column" mt={3}>
           <form className={classes.form} onSubmit={handleSubmit}>
             <TextField
-              id="nickname"
-              name="nickname"
-              label="Display Name"
               autoComplete="nickname"
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
               autoFocus
+              fullWidth
+              id="nickname"
+              label="Display Name"
+              margin="normal"
+              name="nickname"
               onChange={handleChange}
+              required
               value={formValues.displayName}
+              variant="outlined"
             />
             <TextField
-              id="photo"
-              name="photo"
-              type="url"
-              label="Photo URL"
               autoComplete="url"
-              variant="outlined"
-              margin="normal"
               fullWidth
+              id="photo"
+              label="Photo URL"
+              margin="normal"
+              name="photo"
               onChange={handleChange}
+              type="url"
               value={formValues.photoURL}
+              variant="outlined"
             />
             <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
               className={classes.submit}
+              color="primary"
+              fullWidth
+              type="submit"
+              variant="contained"
             >
               Save
             </Button>

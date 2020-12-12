@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import Container from '@material-ui/core/Container'
@@ -6,14 +6,13 @@ import Loader from '~/components/Loader'
 import useUser from '~/hooks/useUser'
 
 const withAuth = (required = false) => {
-  return (Page: NextPage): React.FC => {
-    const WrappedComponent: NextPage = (props) => {
+  return (WrappedComponent: NextPage): NextPage => {
+    const Page: NextPage = (props) => {
       const router = useRouter()
       const { user, loadingUser } = useUser()
-
       const [redirecting, setRedirecting] = React.useState(false)
 
-      useEffect(() => {
+      React.useEffect(() => {
         if (user && !required) {
           router.push('/settings')
           setRedirecting(true)
@@ -21,7 +20,7 @@ const withAuth = (required = false) => {
           router.push('/')
           setRedirecting(true)
         }
-      }, [router, user, loadingUser])
+      }, [router, user])
 
       if (loadingUser || redirecting) {
         return (
@@ -31,12 +30,12 @@ const withAuth = (required = false) => {
         )
       }
 
-      return <Page {...props} />
+      return <WrappedComponent {...props} />
     }
 
-    WrappedComponent.getInitialProps = Page.getInitialProps
+    Page.getInitialProps = WrappedComponent.getInitialProps
 
-    return WrappedComponent
+    return Page
   }
 }
 

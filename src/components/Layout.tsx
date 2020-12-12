@@ -1,7 +1,9 @@
+// TODO:
 import React from 'react'
 import clsx from 'clsx'
 import NextLink from 'next/link'
 import Router from 'next/router'
+import firebase from 'firebase/app'
 import AppBar from '@material-ui/core/AppBar'
 import Avatar from '@material-ui/core/Avatar'
 import Box from '@material-ui/core/Box'
@@ -25,7 +27,6 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile'
 import MenuIcon from '@material-ui/icons/Menu'
 import NoteAddIcon from '@material-ui/icons/NoteAdd'
-import useFirebase from '~/hooks/useFirebase'
 import useUser from '~/hooks/useUser'
 
 const drawerWidth = 240
@@ -140,7 +141,6 @@ const Layout: React.FC<{ title: string }> = (props) => {
   const { title } = props
 
   const classes = useStyles()
-  const firebase = useFirebase()
   const { user } = useUser()
 
   const [mobileOpen, setMobileOpen] = React.useState(false)
@@ -193,9 +193,9 @@ const Layout: React.FC<{ title: string }> = (props) => {
     <>
       <List dense>
         <ListItem
-          button
           aria-controls="simple-menu"
           aria-haspopup="true"
+          button
           onClick={handleClickAccount}
         >
           <MyAvatar src={user.photoURL} />
@@ -209,24 +209,24 @@ const Layout: React.FC<{ title: string }> = (props) => {
           </ListItemSecondaryAction>
         </ListItem>
         <Menu
-          id="simple-menu"
           anchorEl={anchorEl}
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'left',
           }}
           getContentAnchorEl={null}
+          id="simple-menu"
           keepMounted
-          open={Boolean(anchorEl)}
           onClose={handleCloseMenu}
+          open={Boolean(anchorEl)}
         >
           <NextLink href="/settings" passHref>
-            <ListItem dense button>
+            <ListItem button dense>
               <ListItemText primary="Settings" />
             </ListItem>
           </NextLink>
           <Divider />
-          <ListItem dense button onClick={handleClickSignOut}>
+          <ListItem button dense onClick={handleClickSignOut}>
             <ListItemText primary="Sign out" />
           </ListItem>
         </Menu>
@@ -244,7 +244,7 @@ const Layout: React.FC<{ title: string }> = (props) => {
       <List dense>
         {(() =>
           listItems.map(({ Icon, text, href }, i) => (
-            <NextLink key={i} href={href} passHref>
+            <NextLink href={href} key={i} passHref>
               <ListItem button selected={Router.pathname === href}>
                 <ListItemIcon>
                   <Icon />
@@ -264,22 +264,22 @@ const Layout: React.FC<{ title: string }> = (props) => {
       })}
     >
       <AppBar
-        position="fixed"
         className={clsx(classes.appBar, {
           [classes.appBarShift]: mobileOpen,
         })}
+        position="fixed"
       >
         <Toolbar>
           <IconButton
-            color="inherit"
             aria-label="Open drawer"
+            className={classes.menuButton}
+            color="inherit"
             edge="start"
             onClick={handleClickMenuButton}
-            className={classes.menuButton}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>
+          <Typography noWrap variant="h6">
             {title}
           </Typography>
           <div className={classes.grow} />
@@ -289,23 +289,23 @@ const Layout: React.FC<{ title: string }> = (props) => {
       <nav className={classes.drawer}>
         <Hidden smUp>
           <Drawer
-            variant="persistent"
             anchor="left"
-            open={mobileOpen}
             classes={{
               paper: classes.drawerPaper,
             }}
+            open={mobileOpen}
+            variant="persistent"
           >
             {drawer}
           </Drawer>
         </Hidden>
         <Hidden xsDown>
           <Drawer
-            variant="permanent"
-            open
             classes={{
               paper: classes.drawerPaper,
             }}
+            open
+            variant="permanent"
           >
             {drawer}
           </Drawer>

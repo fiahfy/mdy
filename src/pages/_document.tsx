@@ -8,21 +8,12 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          {/* <meta charSet="utf-8" /> */}
-          {/* Use minimum-scale=1 to enable GPU rasterization */}
-          {/* <meta
-            name="viewport"
-            content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
-          /> */}
           {/* PWA primary color */}
-          {/* <meta name="theme-color" content={theme.palette.primary.main} />
-            <link rel="shortcut icon" href="/favicon.ico" /> */}
-          {/* PWA primary color */}
-          <meta name="theme-color" content={theme.palette.primary.main} />
+          <meta content={theme.palette.primary.main} name="theme-color" />
           <link
-            rel="preload"
-            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
             as="style"
+            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+            rel="preload stylesheet"
           />
         </Head>
         <body>

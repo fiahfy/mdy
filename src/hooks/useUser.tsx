@@ -6,7 +6,7 @@ type Props = {
   loadingUser: boolean
 }
 
-export const UserContext = React.createContext<Props>({
+const UserContext = React.createContext<Props>({
   user: null,
   loadingUser: false,
 })

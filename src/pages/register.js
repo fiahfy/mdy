@@ -1,3 +1,4 @@
+// TODO:
 import React from 'react'
 import Router from 'next/router'
 import Avatar from '@material-ui/core/Avatar'
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-function SignUp() {
+function Register() {
   const classes = useStyles()
 
   const [displayName, setDisplayName] = React.useState('')
@@ -55,7 +56,7 @@ function SignUp() {
 
   return (
     <Container component="main" maxWidth="xs">
-      <Box mt={8} display="flex" flexDirection="column" alignItems="center">
+      <Box alignItems="center" display="flex" flexDirection="column" mt={8}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
@@ -64,50 +65,50 @@ function SignUp() {
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit}>
           <TextField
-            id="nickname"
-            name="nickname"
-            label="Display Name"
             autoComplete="nickname"
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
             autoFocus
+            fullWidth
+            id="nickname"
+            label="Display Name"
+            margin="normal"
+            name="nickname"
             onChange={handleDisplayNameChange}
+            required
             value={displayName}
+            variant="outlined"
           />
           <TextField
-            id="email"
-            name="email"
-            type="email"
-            label="Email Address"
             autoComplete="email"
-            variant="outlined"
-            margin="normal"
-            required
             fullWidth
+            id="email"
+            label="Email Address"
+            margin="normal"
+            name="email"
             onChange={handleEmailChange}
+            required
+            type="email"
             value={email}
+            variant="outlined"
           />
           <TextField
-            id="password"
-            name="password"
-            type="password"
-            label="Password"
             autoComplete="current-password"
-            variant="outlined"
-            margin="normal"
-            required
             fullWidth
+            id="password"
+            label="Password"
+            margin="normal"
+            name="password"
             onChange={handlePasswordChange}
+            required
+            type="password"
             value={password}
+            variant="outlined"
           />
           <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
             className={classes.submit}
+            color="primary"
+            fullWidth
+            type="submit"
+            variant="contained"
           >
             Sign Up
           </Button>
@@ -124,4 +125,4 @@ function SignUp() {
   )
 }
 
-export default withAuth()(SignUp)
+export default withAuth()(Register)

@@ -1,3 +1,4 @@
+// TODO:
 import React from 'react'
 import Avatar from '@material-ui/core/Avatar'
 import Box from '@material-ui/core/Box'
@@ -41,7 +42,7 @@ function PasswordReset() {
 
   return (
     <Container component="main" maxWidth="xs">
-      <Box mt={8} display="flex" flexDirection="column" alignItems="center">
+      <Box alignItems="center" display="flex" flexDirection="column" mt={8}>
         <Avatar className={classes.avatar}>
           <EmailOutlinedIcon />
         </Avatar>
@@ -50,25 +51,25 @@ function PasswordReset() {
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit}>
           <TextField
-            id="email"
-            name="email"
-            type="email"
-            label="Email Address"
             autoComplete="email"
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
             autoFocus
+            fullWidth
+            id="email"
+            label="Email Address"
+            margin="normal"
+            name="email"
             onChange={handleEmailChange}
+            required
+            type="email"
             value={email}
+            variant="outlined"
           />
           <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
             className={classes.submit}
+            color="primary"
+            fullWidth
+            type="submit"
+            variant="contained"
           >
             Send password reset email
           </Button>

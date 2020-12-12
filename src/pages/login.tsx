@@ -1,6 +1,7 @@
 import React from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
+import firebase from 'firebase/app'
 import Avatar from '@material-ui/core/Avatar'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
@@ -11,7 +12,6 @@ import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Link from '~/components/Link'
-import useFirebase from '~/hooks/useFirebase'
 import withAuth from '~/hoc/withAuth'
 
 const useStyles = makeStyles((theme) => ({
@@ -28,10 +28,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const SignIn: NextPage = () => {
+const Login: NextPage = () => {
   const classes = useStyles()
   const router = useRouter()
-  const firebase = useFirebase()
 
   const [formValues, setFormValues] = React.useState({
     email: '',
@@ -48,7 +47,7 @@ const SignIn: NextPage = () => {
       .collection('users')
       .doc(user.uid)
       .set({ uid: user.uid })
-    router.push('/notes')
+    router.push('/settings')
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,7 +74,7 @@ const SignIn: NextPage = () => {
 
   return (
     <Container component="main" maxWidth="xs">
-      <Box my={8} display="flex" flexDirection="column" alignItems="center">
+      <Box alignItems="center" display="flex" flexDirection="column" my={8}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
@@ -84,47 +83,47 @@ const SignIn: NextPage = () => {
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit}>
           <TextField
-            id="email"
-            name="email"
-            type="email"
-            label="Email Address"
             autoComplete="email"
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
             autoFocus
+            fullWidth
+            id="email"
+            label="Email Address"
+            margin="normal"
+            name="email"
             onChange={handleChange}
+            required
+            type="email"
             value={formValues.email}
+            variant="outlined"
           />
           <TextField
-            id="password"
-            name="password"
-            type="password"
-            label="Password"
             autoComplete="current-password"
-            variant="outlined"
-            margin="normal"
-            required
             fullWidth
+            id="password"
+            label="Password"
+            margin="normal"
+            name="password"
             onChange={handleChange}
+            required
+            type="password"
             value={formValues.password}
+            variant="outlined"
           />
           <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
             className={classes.submit}
+            color="primary"
+            fullWidth
+            type="submit"
+            variant="contained"
           >
             Sign In
           </Button>
           <Button
-            fullWidth
-            variant="contained"
-            color="primary"
             className={classes.submit}
+            color="primary"
+            fullWidth
             onClick={handleClick}
+            variant="contained"
           >
             Sign In with GitHub
           </Button>
@@ -146,4 +145,4 @@ const SignIn: NextPage = () => {
   )
 }
 
-export default withAuth()(SignIn)
+export default withAuth()(Login)

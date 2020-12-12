@@ -1,3 +1,4 @@
+// TODO:
 import React, { useEffect } from 'react'
 import Head from 'next/head'
 import Box from '@material-ui/core/Box'
@@ -52,17 +53,17 @@ function Trash() {
 
   return (
     <Layout
-      title="Trash"
       menu={
         <IconButton
           aria-label="Delete Note"
-          edge="end"
           color="inherit"
+          edge="end"
           onClick={handleDeleteClick}
         >
           <DeleteSweepIcon />
         </IconButton>
       }
+      title="Trash"
     >
       <Head>
         <title>Trash - Mdy</title>
@@ -76,7 +77,7 @@ function Trash() {
         </List>
       ) : (
         <Container component="main">
-          <Box mt={8} display="flex" flexDirection="column" alignItems="center">
+          <Box alignItems="center" display="flex" flexDirection="column" mt={8}>
             <Box color="lightgray" fontSize={96}>
               <DeleteIcon fontSize="inherit" />
             </Box>

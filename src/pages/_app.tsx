@@ -4,8 +4,8 @@ import { AppProps } from 'next/app'
 import 'easymde/dist/easymde.min.css'
 import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
+import { UserProvider } from '~/hooks/useUser'
 import theme from '~/theme'
-import { UserProvider } from '../hooks/useUser'
 
 export default function MyApp(props: AppProps): JSX.Element {
   const { Component, pageProps } = props
@@ -23,8 +23,8 @@ export default function MyApp(props: AppProps): JSX.Element {
       <Head>
         <title>Mdy</title>
         <meta
-          name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
+          name="viewport"
         />
       </Head>
       <ThemeProvider theme={theme}>

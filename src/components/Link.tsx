@@ -25,13 +25,13 @@ const NextComposed = React.forwardRef<HTMLAnchorElement, NextComposedProps>(
 
     return (
       <NextLink
-        href={href}
-        prefetch={prefetch}
         as={as}
+        href={href}
+        passHref={passHref}
+        prefetch={prefetch}
         replace={replace}
         scroll={scroll}
         shallow={shallow}
-        passHref={passHref}
       >
         <a ref={ref} {...other} />
       </NextLink>
@@ -71,8 +71,8 @@ function Link(props: LinkProps) {
     return (
       <NextComposed
         className={className}
-        ref={innerRef}
         href={href}
+        ref={innerRef}
         {...other}
       />
     )
@@ -80,10 +80,10 @@ function Link(props: LinkProps) {
 
   return (
     <MuiLink
-      component={NextComposed}
       className={className}
-      ref={innerRef}
+      component={NextComposed}
       href={href as string}
+      ref={innerRef}
       {...other}
     />
   )

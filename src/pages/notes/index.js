@@ -1,3 +1,4 @@
+// TODO:
 import React, { Component, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import Head from 'next/head'
@@ -96,9 +97,9 @@ function Index(props) {
 
     return (
       <Fab
-        color="primary"
         aria-label="Add"
         className={classes.fab}
+        color="primary"
         onClick={handleClick}
       >
         <AddIcon />
@@ -118,7 +119,7 @@ function Index(props) {
           <List dense>
             {(() =>
               notes.map((note) => (
-                <NextLink key={note.id} href={`/notes?id=${note.id}`} passHref>
+                <NextLink href={`/notes?id=${note.id}`} key={note.id} passHref>
                   <NoteListItem button note={note} selected={note.id === id} />
                 </NextLink>
               )))()}
@@ -127,7 +128,7 @@ function Index(props) {
         </>
       ) : (
         <Container component="main">
-          <Box mt={8} display="flex" flexDirection="column" alignItems="center">
+          <Box alignItems="center" display="flex" flexDirection="column" mt={8}>
             <Box color="lightgray" fontSize={96}>
               <InsertDriveFileIcon fontSize="inherit" />
             </Box>
@@ -244,24 +245,23 @@ class InnerShow extends Component {
 
     return (
       <Layout
-        title={this.title()}
         menu={
           <IconButton
             aria-label="Delete Note"
-            edge="end"
             color="inherit"
+            edge="end"
             onClick={this.handleDeleteClick}
           >
             <DeleteIcon />
           </IconButton>
         }
+        title={this.title()}
       >
         <Head>
           <title>{this.title()} - Mdy</title>
         </Head>
         <Box>
           <SimpleMDE
-            value={content}
             onChange={this.handleTextChange}
             options={{
               minHeight: `${window.innerHeight}px`, // eslint-disable-line no-undef
@@ -271,6 +271,7 @@ class InnerShow extends Component {
               toolbar: false,
               status: false,
             }}
+            value={content}
           />
         </Box>
       </Layout>

@@ -6,6 +6,7 @@ module.exports = {
   extends: ['@fiahfy/next'],
   rules: {
     'react/display-name': 'off',
+    'react/jsx-sort-props': 'error',
     'react/prop-types': 'off',
   },
 }
