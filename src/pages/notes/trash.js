@@ -1,6 +1,5 @@
 // TODO:
 import React, { useEffect } from 'react'
-import Head from 'next/head'
 import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
 import IconButton from '@material-ui/core/IconButton'
@@ -65,9 +64,6 @@ function Trash() {
       }
       title="Trash"
     >
-      <Head>
-        <title>Trash - Mdy</title>
-      </Head>
       {loading ? (
         <Loader />
       ) : notes.length ? (

@@ -1,7 +1,6 @@
 // TODO:
 import React, { Component, useEffect } from 'react'
 import * as PropTypes from 'prop-types'
-import Head from 'next/head'
 import NextLink from 'next/link'
 import Router from 'next/router'
 import Error from 'next/error'
@@ -109,9 +108,6 @@ function Index(props) {
 
   return (
     <Layout title="All Notes">
-      <Head>
-        <title>All Notes - Mdy</title>
-      </Head>
       {loading ? (
         <Loader />
       ) : notes.length ? (
@@ -257,9 +253,6 @@ class InnerShow extends Component {
         }
         title={this.title()}
       >
-        <Head>
-          <title>{this.title()} - Mdy</title>
-        </Head>
         <Box>
           <SimpleMDE
             onChange={this.handleTextChange}

@@ -1,5 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import firebase from 'firebase/app'
 import AppBar from '@material-ui/core/AppBar'
@@ -258,74 +259,79 @@ const Layout: React.FC<{ title: string }> = (props) => {
   )
 
   return (
-    <div
-      className={clsx(classes.root, {
-        [classes.rootShift]: mobileOpen,
-      })}
-    >
-      <AppBar
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: mobileOpen,
-        })}
-        position="fixed"
-      >
-        <Toolbar>
-          <IconButton
-            aria-label="Open drawer"
-            className={classes.menuButton}
-            color="inherit"
-            edge="start"
-            onClick={handleClickMenuButton}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography noWrap variant="h6">
-            {title}
-          </Typography>
-          <div className={classes.grow} />
-          {/* {menu} */}
-        </Toolbar>
-      </AppBar>
-      <nav className={classes.drawer}>
-        <Hidden smUp>
-          <Drawer
-            anchor="left"
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            open={mobileOpen}
-            variant="persistent"
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        <Hidden xsDown>
-          <Drawer
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            open
-            variant="permanent"
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-      </nav>
-      <main
-        className={clsx(classes.content, {
-          [classes.contentShift]: mobileOpen,
+    <>
+      <Head>
+        <title>{title} - Mdy</title>
+      </Head>
+      <div
+        className={clsx(classes.root, {
+          [classes.rootShift]: mobileOpen,
         })}
       >
-        <div className={classes.toolbar} />
-        {props.children}
-        <div
-          className={clsx(classes.mask, {
-            [classes.maskShift]: mobileOpen,
+        <AppBar
+          className={clsx(classes.appBar, {
+            [classes.appBarShift]: mobileOpen,
           })}
-          onClick={handleClickMask}
-        />
-      </main>
-    </div>
+          position="fixed"
+        >
+          <Toolbar>
+            <IconButton
+              aria-label="Open drawer"
+              className={classes.menuButton}
+              color="inherit"
+              edge="start"
+              onClick={handleClickMenuButton}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography noWrap variant="h6">
+              {title}
+            </Typography>
+            <div className={classes.grow} />
+            {/* {menu} */}
+          </Toolbar>
+        </AppBar>
+        <nav className={classes.drawer}>
+          <Hidden smUp>
+            <Drawer
+              anchor="left"
+              classes={{
+                paper: classes.drawerPaper,
+              }}
+              open={mobileOpen}
+              variant="persistent"
+            >
+              {drawer}
+            </Drawer>
+          </Hidden>
+          <Hidden xsDown>
+            <Drawer
+              classes={{
+                paper: classes.drawerPaper,
+              }}
+              open
+              variant="permanent"
+            >
+              {drawer}
+            </Drawer>
+          </Hidden>
+        </nav>
+        <main
+          className={clsx(classes.content, {
+            [classes.contentShift]: mobileOpen,
+          })}
+        >
+          <div className={classes.toolbar} />
+          {props.children}
+          <div
+            className={clsx(classes.mask, {
+              [classes.maskShift]: mobileOpen,
+            })}
+            onClick={handleClickMask}
+          />
+        </main>
+      </div>
+    </>
   )
 }
 

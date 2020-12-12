@@ -47,9 +47,6 @@ const Settings: NextPage = () => {
 
   return (
     <Layout title="Settings">
-      <Head>
-        <title>Settings - Mdy</title>
-      </Head>
       <Container maxWidth="xs">
         <Box alignItems="center" display="flex" flexDirection="column" mt={3}>
           <form className={classes.form} onSubmit={handleSubmit}>
