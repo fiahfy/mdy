@@ -6,35 +6,35 @@
 
 ```bash
 # install dependencies
-$ yarn
+yarn
 
 # serve with hot reload at localhost:3000
-$ yarn dev
+yarn dev
 
 # build for production and launch server
-$ yarn build
-$ yarn start
+yarn build
+yarn start
 
 # generate static project
-$ yarn export
+yarn export
 
 # deploy to Firebase Hosting
-$ yarn deploy
+yarn deploy
 ```
 
 ## Firebase Setup
 
 ### Deploy Settings
-```
+```bash
 # deploy firestore settings (rules and indexes)
 firebase deploy --only firestore
 ```
 
 ### Create `.env` file
 ```
-API_KEY=<apiKey>
-AUTH_DOMAIN=<authDomain>
-DATABASE_URL=<databaseURL>
-PROJECT_ID=<projectId>
-STORAGE_BUCKET=<storageBucket>
+NEXT_PUBLIC_FIREBASE_API_KEY=<apiKey>
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=<authDomain>
+NEXT_PUBLIC_FIREBASE_DATABASE_URL=<databaseURL>
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=<projectId>
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=<storageBucket>
 ```
