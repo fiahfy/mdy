@@ -41,7 +41,7 @@
     "deploy": "firebase deploy --only hosting",
     "dev": "next",
     "export": "next export",
-    "lint": "eslint --ext .js,.ts,.tsx --ignore-path .gitignore .",
+    "lint": "eslint -f codeframe --ext .js,.ts,.tsx --ignore-path .gitignore .",
     "release": "npm run build && npm run export && npm run deploy",
     "start": "next start",
     "test": "npm run lint"
