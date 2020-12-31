@@ -25,12 +25,14 @@ yarn deploy
 ## Firebase Setup
 
 ### Deploy Settings
+
 ```bash
 # deploy firestore settings (rules and indexes)
 firebase deploy --only firestore
 ```
 
 ### Create `.env` file
+
 ```
 NEXT_PUBLIC_FIREBASE_API_KEY=<apiKey>
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=<authDomain>

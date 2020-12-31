@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2018",
+    "target": "es2020",
     "module": "esnext",
     "sourceMap": true,
     "noEmit": true,
@@ -9,22 +9,17 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"],
-      "~~/*": ["./*"],
+      "~~/*": ["./*"]
     },
     "esModuleInterop": true,
-    "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext",
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "resolveJsonModule": true
   },
   "include": ["src"],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules"]
 }

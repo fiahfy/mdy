@@ -1,6 +1,5 @@
 import React from 'react'
 import { NextPage } from 'next'
-import Head from 'next/head'
 import firebase from 'firebase/app'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'

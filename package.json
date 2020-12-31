@@ -11,16 +11,16 @@
     "@material-ui/core": "^4.11.2",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/styles": "^4.11.2",
-    "firebase": "^8.2.0",
-    "next": "^10.0.3",
+    "firebase": "^8.2.1",
+    "next": "^10.0.4",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-simplemde-editor": "^4.1.3"
   },
   "devDependencies": {
-    "@fiahfy/eslint-config-next": "^0.0.10",
-    "eslint": "^7.15.0",
-    "husky": "^4.3.5",
+    "@fiahfy/eslint-config-next": "^0.0.11",
+    "eslint": "^7.16.0",
+    "husky": "^4.3.6",
     "prettier": "^2.2.1",
     "typescript": "^4.1.3"
   },
@@ -41,7 +41,9 @@
     "deploy": "firebase deploy --only hosting",
     "dev": "next",
     "export": "next export",
-    "lint": "eslint -f codeframe --ext .js,.ts,.tsx --ignore-path .gitignore .",
+    "lint": "npm run lint:eslint && npm run lint:prettier",
+    "lint:eslint": "eslint -f codeframe --ext .js,.ts,.tsx --ignore-path .gitignore .",
+    "lint:prettier": "prettier -c --ignore-path .gitignore **/*.{js,ts,tsx}",
     "release": "npm run build && npm run export && npm run deploy",
     "start": "next start",
     "test": "npm run lint"
