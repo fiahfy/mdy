@@ -46,7 +46,7 @@ const Login: NextPage = () => {
       .collection('users')
       .doc(user.uid)
       .set({ uid: user.uid })
-    router.push('/settings')
+    router.push('/notes')
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,7 +67,7 @@ const Login: NextPage = () => {
 
   const handleClick = async () => {
     const provider = new firebase.auth.GithubAuthProvider()
-    await firebase.auth().signInWithPopup(provider)
+    await firebase.auth().signInWithRedirect(provider)
     await afterSignIn()
   }
 

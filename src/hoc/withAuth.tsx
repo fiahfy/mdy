@@ -14,7 +14,7 @@ const withAuth = (required = false) => {
 
       React.useEffect(() => {
         if (user && !required) {
-          router.push('/settings')
+          router.push('/notes')
           setRedirecting(true)
         } else if (!user && required) {
           router.push('/')

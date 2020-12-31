@@ -1,9 +1,8 @@
-// TODO:
 import React from 'react'
-import * as PropTypes from 'prop-types'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import { makeStyles } from '@material-ui/core/styles'
+import { Note } from '~/models'
 
 const useStyles = makeStyles(() => ({
   listItemSecondaryText: {
@@ -16,45 +15,39 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-// eslint-disable-next-line react/display-name
-const NoteListItem = React.forwardRef(function (props, ref) {
+const NoteListItem: React.ForwardRefRenderFunction<
+  any,
+  { note: Note; button: boolean }
+> = (props, ref) => {
+  const { note, button } = props
+  console.log(note)
+
   const classes = useStyles()
 
-  const { note } = props
-
-  function title() {
+  const title = React.useMemo(() => {
     const match = (note.content || '').match(/# (.*)\n?/)
     return match && match[1] ? match[1] : '(Untitled)'
-  }
+  }, [note.content])
 
-  function body() {
+  const body = React.useMemo(() => {
     const replaced = (note.content || '').replace(/# (.*)\n?/, '')
     return replaced
-  }
+  }, [note.content])
 
   return (
-    <ListItem {...props} alignItems="flex-start" ref={ref}>
+    <ListItem alignItems="flex-start" button={button as any} ref={ref}>
       <ListItemText
-        primary={title()}
+        primary={title}
         primaryTypographyProps={{
           variant: 'subtitle1',
         }}
-        secondary={body()}
+        secondary={body}
         secondaryTypographyProps={{
           className: classes.listItemSecondaryText,
         }}
       />
     </ListItem>
   )
-})
-
-NoteListItem.defaultProps = {
-  selected: false,
 }
 
-NoteListItem.propTypes = {
-  note: PropTypes.object.isRequired,
-  selected: PropTypes.bool,
-}
-
-export default NoteListItem
+export default React.forwardRef(NoteListItem)

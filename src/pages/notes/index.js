@@ -16,11 +16,11 @@ import { makeStyles, withStyles } from '@material-ui/core/styles'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile'
-import NoteListItem from '../../utils/NoteListItem'
-import Layout from '../../components/Layout'
-import Loader from '../../components/Loader'
-import app from '../../firebase'
-import withAuth from '../../hoc/withAuth'
+import Layout from '~/components/Layout'
+import Loader from '~/components/Loader'
+import NoteListItem from '~/components/NoteListItem'
+import withAuth from '~/hoc/withAuth'
+import app from '~/firebase'
 
 const debounce = (callback, milli) => {
   let timer
