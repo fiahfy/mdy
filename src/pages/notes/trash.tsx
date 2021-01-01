@@ -1,5 +1,6 @@
-// TODO:
-import React, { useEffect } from 'react'
+import React from 'react'
+import { NextPage } from 'next'
+import firebase from 'firebase/app'
 import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
 import IconButton from '@material-ui/core/IconButton'
@@ -10,26 +11,32 @@ import DeleteSweepIcon from '@material-ui/icons/DeleteSweep'
 import Layout from '~/components/Layout'
 import Loader from '~/components/Loader'
 import NoteListItem from '~/components/NoteListItem'
+import { Note } from '~/models'
 import withAuth from '~/hoc/withAuth'
-import app from '~/firebase'
+import useUser from '~/hooks/useUser'
 
-function Trash() {
-  const user = app.auth().currentUser
-
+const Trash: NextPage = () => {
+  const { user } = useUser()
   const [loading, setLoading] = React.useState(true)
-  const [notes, setNotes] = React.useState([])
+  const [notes, setNotes] = React.useState<Note[]>([])
 
   async function handleDeleteClick() {
-    const batch = app.firestore().batch()
-    for (let { id } of notes) {
-      const ref = app.firestore().doc(`users/${user.uid}/notes/${id}`)
+    if (!user) {
+      return
+    }
+    const batch = firebase.firestore().batch()
+    for (const { id } of notes) {
+      const ref = firebase.firestore().doc(`users/${user.uid}/notes/${id}`)
       batch.delete(ref)
     }
     await batch.commit()
   }
 
-  useEffect(() => {
-    const unsubscribe = app
+  React.useEffect(() => {
+    if (!user) {
+      return
+    }
+    const unsubscribe = firebase
       .firestore()
       .collection(`users/${user.uid}/notes`)
       .where('deleted_at', '>', new Date(0))
@@ -37,7 +44,7 @@ function Trash() {
       .limit(10)
       .onSnapshot((snapshot) => {
         const notes = snapshot.docs.map((doc) => {
-          const data = doc.data()
+          const data = doc.data() as Note
           return {
             ...data,
             id: doc.id,
@@ -46,7 +53,6 @@ function Trash() {
         setNotes(notes)
         setLoading(false)
       })
-
     return () => unsubscribe()
   }, [user])
 
@@ -68,8 +74,9 @@ function Trash() {
         <Loader />
       ) : notes.length ? (
         <List dense>
-          {(() =>
-            notes.map((note) => <NoteListItem key={note.id} note={note} />))()}
+          {notes.map((note) => (
+            <NoteListItem key={note.id} note={note} />
+          ))}
         </List>
       ) : (
         <Container component="main">

@@ -6,7 +6,7 @@ import Loader from '~/components/Loader'
 import useUser from '~/hooks/useUser'
 
 const withAuth = (required = false) => {
-  return (WrappedComponent: NextPage): NextPage => {
+  return (WrappedComponent: NextPage<any>): NextPage => {
     const Page: NextPage = (props) => {
       const router = useRouter()
       const { user, loadingUser } = useUser()

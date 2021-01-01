@@ -1,5 +1,5 @@
 import React from 'react'
-import ListItem from '@material-ui/core/ListItem'
+import ListItem, { ListItemProps } from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import { makeStyles } from '@material-ui/core/styles'
 import { Note } from '~/models'
@@ -17,10 +17,9 @@ const useStyles = makeStyles(() => ({
 
 const NoteListItem: React.ForwardRefRenderFunction<
   any,
-  { note: Note; button: boolean }
+  ListItemProps & { note: Note }
 > = (props, ref) => {
-  const { note, button } = props
-  console.log(note)
+  const { note, button, ...others } = props
 
   const classes = useStyles()
 
@@ -35,7 +34,12 @@ const NoteListItem: React.ForwardRefRenderFunction<
   }, [note.content])
 
   return (
-    <ListItem alignItems="flex-start" button={button as any} ref={ref}>
+    <ListItem
+      {...others}
+      alignItems="flex-start"
+      button={button as any}
+      ref={ref}
+    >
       <ListItemText
         primary={title}
         primaryTypographyProps={{

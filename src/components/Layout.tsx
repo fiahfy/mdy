@@ -138,8 +138,10 @@ const MyAvatar: React.FC<{ src: string | null }> = (props) => {
   }
 }
 
-const Layout: React.FC<{ title: string }> = (props) => {
-  const { title } = props
+const Layout: React.FC<{ menu?: React.ReactNode; title?: string }> = (
+  props
+) => {
+  const { menu, title } = props
 
   const classes = useStyles()
   const router = useRouter()
@@ -260,9 +262,7 @@ const Layout: React.FC<{ title: string }> = (props) => {
 
   return (
     <>
-      <Head>
-        <title>{title} - Mdy</title>
-      </Head>
+      <Head>{title && <title>{title} - Mdy</title>}</Head>
       <div
         className={clsx(classes.root, {
           [classes.rootShift]: mobileOpen,
@@ -288,7 +288,7 @@ const Layout: React.FC<{ title: string }> = (props) => {
               {title}
             </Typography>
             <div className={classes.grow} />
-            {/* {menu} */}
+            {menu}
           </Toolbar>
         </AppBar>
         <nav className={classes.drawer}>
